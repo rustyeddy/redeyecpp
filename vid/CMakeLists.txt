@@ -3,9 +3,10 @@ project( vid )
 find_package( OpenCV REQUIRED )
 include_directories( ${OpenCV_INCLUDE_DIRS} )
 add_executable( vid
-                config.cpp 
+                config.cpp
+                display.cpp
+                main.cpp
                 vid.cpp
-                win.cpp
                 )       
 
 target_link_libraries( vid ${OpenCV_LIBS} )

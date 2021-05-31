@@ -1,6 +1,16 @@
 #pragma once
 
-#include <opencv2/highgui/highgui.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
+#include <string>
+#include <opencv2/opencv.hpp>
 
-extern cv::VideoCapture g_cap;
+using namespace std;
+
+class Video
+{
+    string              _name;
+    cv::VideoCapture    _cap;
+    
+public:
+    Video(string name);
+    cv::Mat get_frame();
+};
