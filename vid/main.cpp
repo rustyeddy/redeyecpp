@@ -32,6 +32,8 @@ int main(int argc, char** argv )
         for (int i = 2; i < argc; i++) {
             dis->display(iframe, argv[i]); /* display with all the filters */
         }
+
+        // TODO process input keystrokes here
         if ( 27 == (char) cv::waitKey(33) ) break;
     }
     cout << "Goodbye, all done. " << endl;

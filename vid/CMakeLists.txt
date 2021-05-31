@@ -5,6 +5,7 @@ include_directories( ${OpenCV_INCLUDE_DIRS} )
 add_executable( vid
                 config.cpp
                 display.cpp
+                filter.cpp
                 main.cpp
                 vid.cpp
                 )       
