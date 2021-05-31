@@ -9,6 +9,7 @@ using namespace std;
 Display::Display(string name)
 {
     _name = name;
+    namedWindow(_name);
 }
 
 Filter* Display::get_filter(string name)
@@ -21,6 +22,9 @@ Filter* Display::get_filter(string name)
     } else if (name == "smaller") {
         f = new FltSmaller();
     }
+    if (f != NULL) {
+        namedWindow(name, 1);
+    }
     return f;
 }
 
@@ -31,7 +35,6 @@ void Display::display(cv::Mat& iframe)
 
 void Display::display(Mat& iframe, string fname)
 {
-    imshow("Video Display", iframe);
     Filter *filter = get_filter(fname);
     Mat &oframe = filter->filter(iframe);
     imshow(fname, oframe);

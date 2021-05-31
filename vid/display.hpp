@@ -23,8 +23,10 @@ protected:
 
 public:
     Display(string name);
+
     Filter* get_filter(string name);
+    Mat& filter(Mat& frame);
+
     void display(Mat& frame);
     void display(Mat& frame, string filter);
-    Mat& filter(Mat& frame);
 };
