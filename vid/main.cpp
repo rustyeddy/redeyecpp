@@ -23,6 +23,7 @@ int main(int argc, char** argv )
     vid = new Video( argv[1] );
 
     int filterc = argc - 2;
+    cv::startWindowThread();
     for (;;) {
         cv::Mat iframe = vid->get_frame();
         if (iframe.empty()) break;

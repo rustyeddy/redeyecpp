@@ -28,15 +28,16 @@ Filter* Display::get_filter(string name)
     return f;
 }
 
-void Display::display(cv::Mat& iframe)
-{
-    cv::imshow(_name, iframe);
-}
-
 void Display::display(Mat& iframe, string fname)
 {
-    Filter *filter = get_filter(fname);
-    Mat &oframe = filter->filter(iframe);
+    Filter *filter = NULL;
+    Mat &oframe = iframe;
+    if (fname != "")  {
+        filter = get_filter(fname);
+        oframe = filter->filter(iframe);
+    } else {
+        fname = _name;
+    }
 
     // TODO: add to a list (or map) of open windows
     imshow(fname, oframe);

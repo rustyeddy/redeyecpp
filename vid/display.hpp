@@ -27,6 +27,5 @@ public:
     Filter* get_filter(string name);
     Mat& filter(Mat& frame);
 
-    void display(Mat& frame);
-    void display(Mat& frame, string filter);
+    void display(Mat& frame, string filter = "");
 };
