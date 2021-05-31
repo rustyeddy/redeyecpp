@@ -4,6 +4,8 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 
+#include "vid.hpp"
+
 using namespace std;
 
 void do_gausian(cv::Mat& iframe);
@@ -12,13 +14,12 @@ void do_canny(cv::Mat& iframe);
 
 // The trackbar can only be used on saved video files, live video is
 // not supported.
-int g_slider_position = 0;
 int g_run = 1;
 int g_dontset = 0;
 bool g_do_gausian = false;
 bool g_do_pyr_down = false;
 bool g_do_canny = true;
-
+string fname = "";
 
 cv::VideoCapture g_cap;
 
@@ -81,15 +82,6 @@ int main(int argc, char** argv )
     return 0;
 }
 
-void onTrackbarSlide( int pos, void * ) {
-    g_cap.set( cv::CAP_PROP_POS_FRAMES, pos );
-
-    if ( !g_dontset ) {
-        g_run = 1;
-        g_dontset = 0;
-    }
-}
-
 void do_gausian(cv::Mat& iframe)
 {
     cv::Mat oframe;
@@ -113,29 +105,5 @@ void do_canny(cv::Mat& iframe)
 
     cv::Canny( igray, icanny, 10, 100, 3, true );
     cv::imshow( "Corny", icanny );
-}
-
-void do_main_window()
-{
-    // Choose a more descriptive name
-    //cv::namedWindow( "Vid Viewer", cv::WINDOW_AUTOSIZE );
-    //cv::namedWindow( "Vid Other", cv::WINDOW_AUTOSIZE );
-    int frames = (int) g_cap.get(cv::CAP_PROP_FRAME_COUNT);
-    int tmpw   = (int) g_cap.get(cv::CAP_PROP_FRAME_WIDTH);
-    int tmph   = (int) g_cap.get(cv::CAP_PROP_FRAME_HEIGHT);
-
-    cout << "Video is playing " << frames << " frame/sec at "
-         << tmpw << "w by "
-         << tmph << "h"
-         << endl;
-
-    if (frames > 0) {
-        cv::createTrackbar("Position", "X", &g_slider_position, frames, onTrackbarSlide);
-    }
-    int curpos = (int) g_cap.get(cv::CAP_PROP_POS_FRAMES);
-    g_dontset = 1;
-    if (curpos > 0) {
-        cv::setTrackbarPos("Postion", "X", curpos);                
-    }
 }
 
