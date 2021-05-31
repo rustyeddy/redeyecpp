@@ -37,5 +37,7 @@ void Display::display(Mat& iframe, string fname)
 {
     Filter *filter = get_filter(fname);
     Mat &oframe = filter->filter(iframe);
+
+    // TODO: add to a list (or map) of open windows
     imshow(fname, oframe);
 }

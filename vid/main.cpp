@@ -36,5 +36,7 @@ int main(int argc, char** argv )
         // TODO process input keystrokes here
         if ( 27 == (char) cv::waitKey(33) ) break;
     }
+
+    cv::destroyAllWindows();
     cout << "Goodbye, all done. " << endl;
 }
