@@ -16,7 +16,7 @@ void Display::add_filter(string name)
 
 void Display::display(cv::Mat& iframe)
 {
-    cv::imshow("Processed", iframe);
+    cv::imshow(_name, iframe);
 }
 
 void Display::display(Mat& iframe, string filter)
@@ -28,7 +28,7 @@ void Display::display(Mat& iframe, string filter)
     } else if (filter == "smaller") {
         iframe = pyramid_down(iframe);
     } else {
-        cerr << "Bad filter name: " << filter << endl;
+        cerr << "Bad filter name: " << filter << endl; // TODO - Make this a counter
     }
     cv::imshow(filter, iframe);
 }

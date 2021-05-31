@@ -9,42 +9,29 @@
 
 using namespace std;
 
-// The trackbar can only be used on saved video files, live video is
-// not supported.
-/*
-int g_run = 1;
-int g_dontset = 0;
-
-bool g_do_gausian = false;
-bool g_do_pyr_down = false;
-bool g_do_canny = true;
-bool g_do_save_avi = true;
-string fname = "";
-*/
-
 int main(int argc, char** argv )
 {
     Video       *vid;
     Display     *dis;
 
-    if ( argc < 2 )  {
-        printf("usage: <videopath> [<filter>]\n");
+    if ( argc < 1 )  {
+        cerr << "usage: <videopath> [<filter>] <<" << endl;
         return -1;
     }
 
+    dis = new Display( argv[0] );
     vid = new Video( argv[1] );
-    cout << "Video player has been created." << endl;
 
-    dis = new Display("guassian");
-    cout << "Video display has been created." << endl;
-
+    int filterc = argc - 2;
     for (;;) {
         cv::Mat iframe = vid->get_frame();
         if (iframe.empty()) break;
 
-        dis->display(iframe);
-        dis->display(iframe, argv[2]);
+        dis->display(iframe);   /* display with out a filter */
 
+        for (int i = 2; i < argc; i++) {
+            dis->display(iframe, argv[i]); /* display with all the filters */
+        }
         if ( 27 == (char) cv::waitKey(33) ) break;
     }
     cout << "Goodbye, all done. " << endl;
