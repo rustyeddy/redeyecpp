@@ -11,12 +11,17 @@ cv::Mat& Filter::filter(cv::Mat& iframe)
     return iframe;
 }
 
-FltGaussianBlur::FltGaussianBlur() : Filter("gaussian")
+cv::Mat& FltNULL::filter(Mat& iframe)
 {
+    _image = &iframe;
+    return iframe;
 }
+
 
 cv::Mat& FltGaussianBlur::filter(cv::Mat& iframe)
 {
+    _image = &iframe;
+
     cv::GaussianBlur( iframe, iframe, cv::Size(5,5), 3, 3);
     cv::GaussianBlur( iframe, iframe, cv::Size(5,5), 3, 3);
     return iframe;
@@ -24,12 +29,14 @@ cv::Mat& FltGaussianBlur::filter(cv::Mat& iframe)
 
 cv::Mat& FltSmaller::filter(cv::Mat& iframe)
 {
+    _image = &iframe;
     cv::pyrDown( iframe, iframe );
     return iframe;
 }
 
 cv::Mat& FltCanny::filter(cv::Mat& iframe)
 {
+    _image = &iframe;
     cv::cvtColor(iframe, iframe, cv::COLOR_BGR2GRAY);
     cv::Canny( iframe, iframe, 10, 100, 3, true );
     return iframe;

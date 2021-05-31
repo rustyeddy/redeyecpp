@@ -11,9 +11,19 @@ class Filter
 private:
     string      _name;
 
+protected:
+    Mat*        _image = NULL;
+
 public:
-    Filter(string n)    { _name = n; }
+    Filter(string n) { _name = n; }
     virtual Mat& filter(Mat& iframe);
+    string to_string() { return _name; }
+};
+
+class FltNULL : public Filter {
+public:
+    FltNULL() : Filter("") {}
+    Mat& filter(Mat& iframe);
 };
 
 class FltSmaller : public Filter {
@@ -25,7 +35,7 @@ public:
 class FltGaussianBlur : public Filter
 {
 public:
-    FltGaussianBlur();
+    FltGaussianBlur() : Filter("gaussian") {}
     Mat& filter(Mat& iframe);
 }; 
     
@@ -36,9 +46,4 @@ public:
     Mat& filter(Mat& iframe);
 };
 
-// Mat& filter(Mat& ifr)
-// Mat& canny(Mat& iframe);
-// Mat& gaussian(Mat& iframe);
-// Mat& pyramid_down(Mat& iframe);
-// bool save_avi(string fname, Mat& iframe);
 
