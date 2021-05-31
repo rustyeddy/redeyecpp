@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include <list>
+#include <map>
 
 #include <opencv2/opencv.hpp>
 #include "filter.hpp"
@@ -9,22 +9,19 @@
 using namespace std;
 using namespace cv;
 
-#include <string>
-
-#include "filter.hpp"
-
 class Display
 {
 private:
-    string         _name;
+    string              _name;
 
 protected:
-    string      _win_main       = "vid";
+    map<string,Filter*> _filters;
 
 public:
     Display(string name);
 
-    Filter* get_filter(string name);
+    void        add_filter(string name, Filter* f);
+    Filter*     get_filter(string name);
     Mat& filter(Mat& frame);
 
     void display(Mat& frame, string filter = "");

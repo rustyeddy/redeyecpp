@@ -9,12 +9,23 @@ using namespace std;
 Display::Display(string name)
 {
     _name = name;
-    namedWindow(_name);
+}
+
+void Display::add_filter(string name, Filter* f)
+{
+    _filters[name] = f;
 }
 
 Filter* Display::get_filter(string name)
 {
     Filter *f = NULL;
+    auto it = _filters.find(name);
+    if (it != _filters.end()) {
+        f = _filters[name];
+    }
+    return f;
+    
+#ifdef REMOVE
     if (name == "gaussian") {
         f = new FltGaussianBlur();
     } else if (name == "canny") {
@@ -24,8 +35,8 @@ Filter* Display::get_filter(string name)
     }
     if (f != NULL) {
         namedWindow(name, 1);
-    }
-    return f;
+    } 
+#endif // remove
 }
 
 void Display::display(Mat& iframe, string fname)

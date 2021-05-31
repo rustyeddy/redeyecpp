@@ -6,6 +6,7 @@
 
 #include "vid.hpp"
 #include "display.hpp"
+#include "filter.hpp"
 
 using namespace std;
 
@@ -19,8 +20,12 @@ int main(int argc, char** argv )
         return -1;
     }
 
-    dis = new Display( argv[0] );
     vid = new Video( argv[1] );
+
+    dis = new Display( argv[0] );
+    dis->add_filter("gaussian", new FltGaussianBlur());
+    dis->add_filter("canny", new FltCanny());
+    dis->add_filter("smaller", new FltSmaller());
 
     int filterc = argc - 2;
     cv::startWindowThread();
@@ -29,9 +34,8 @@ int main(int argc, char** argv )
         if (iframe.empty()) break;
 
         dis->display(iframe);   /* display with out a filter */
-
         for (int i = 2; i < argc; i++) {
-            dis->display(iframe, argv[i]); /* display with all the filters */
+            dis->display(iframe, argv[i]); // display with all the filters */
         }
 
         // TODO process input keystrokes here
