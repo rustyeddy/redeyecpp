@@ -2,18 +2,18 @@
 #include <opencv2/opencv.hpp>
 #include "filter.hpp"
 #include "display.hpp"
+#include "externs.hpp"
 
 using namespace cv;
 using namespace std;
 
 void mouse_callback( int event, int x, int y, int flags, void *param )
 {
-    Filter *f = (Filter *) param;
-    if (param == NULL) {
-        f = new FltNULL();
+    Filter *f = NULL;
+    if (param != NULL) {
+        f = (Filter *) param;        
+        cout << "Mouse Event: " << f->to_string() << " ~ event: " << event << ", x: " << x << ", y: " << y << endl;
     }
-    // cout << "Mouse Event: " << f->to_string() << " ~ event: " << event << ", x: " << x << ", y: " << y << endl;
-    //f->mouse_callback( event, x, y, flags );
 
     switch ( event ) {
     case EVENT_MOUSEMOVE: 
@@ -45,43 +45,20 @@ void mouse_callback( int event, int x, int y, int flags, void *param )
 Display::Display(string name)
 {
     _name = name;
-    _image = NULL;
-
     namedWindow( name );
     cv::setMouseCallback( name, mouse_callback, (void *) NULL );
 }
 
-void Display::add_filter(string name, Filter* f)
+void Display::display(Mat& img, string fname)
 {
-    _filters[name] = f;
-    namedWindow( name );
-    cv::setMouseCallback( name, mouse_callback, (void *) f );
-}
-
-Filter* Display::get_filter(string name)
-{
-    Filter *f = NULL;
-    auto it = _filters.find(name);
-    if (it != _filters.end()) {
-        f = _filters[name];
-    }
-    return f;
-}
-
-void Display::display(Mat& iframe, string fname)
-{
-    _image = &iframe;
-
-    Filter *filter = NULL;
-    Mat &oframe = iframe;
-
+    Mat &oframe = img;
     if (fname != "")  {
-        filter = get_filter(fname);
-        oframe = filter->filter(iframe);
+        Filter *filter = filters->get(fname);
+        if (filter) {
+            oframe = filter->filter(img);                            
+        }
     } else {
-        fname = _name;
+        fname = main_window;
     }
-
-    // TODO: add to a list (or map) of open windows
     imshow(fname, oframe);
 }

@@ -7,35 +7,36 @@
 #include "vid.hpp"
 #include "display.hpp"
 #include "filter.hpp"
+#include "filter_default.hpp"
+#include "filters.hpp"
+#include "externs.hpp"
 
 using namespace std;
 
+string          main_window = "Video";
+FltFilters*     filters;
+Display*        display;
+Video*          video;
+
 int main(int argc, char** argv )
 {
-    Video       *vid;
-    Display     *dis;
-
-    if ( argc < 1 )  {
+    if ( argc < 2 )  {
         cerr << "usage: <videopath> [<filter>] <<" << endl;
         return -1;
     }
 
-    vid = new Video( argv[1] );
-
-    dis = new Display( argv[0] );
-    dis->add_filter("gaussian", new FltGaussianBlur());
-    dis->add_filter("canny", new FltCanny());
-    dis->add_filter("smaller", new FltSmaller());
-
-    int filterc = argc - 2;
+    display = new Display( main_window );
+    video = new Video( argv[1] );
+    filters = new FltFilters();
+    
     cv::startWindowThread();
     for (;;) {
-        cv::Mat iframe = vid->get_frame();
+        cv::Mat iframe = video->get_frame();
         if (iframe.empty()) break;
 
-        dis->display(iframe);   /* display with out a filter */
+        display->display(iframe);   /* display with out a filter */
         for (int i = 2; i < argc; i++) {
-            dis->display(iframe, argv[i]); // display with all the filters */
+            display->display(iframe, argv[i]); // display with all the filters */
         }
 
         // TODO process input keystrokes here

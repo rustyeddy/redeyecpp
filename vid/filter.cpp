@@ -1,44 +1,20 @@
-#include <list>
+#include <string>
 
 #include <opencv2/opencv.hpp>
 
 #include "filter.hpp"
 
-list<string> Filters;
+Filter::Filter(string n)
+{
+    _name = n;
+}
+
+string Filter::Name() {
+    return _name;
+}
 
 cv::Mat& Filter::filter(cv::Mat& iframe)
 {
-    return iframe;
-}
-
-cv::Mat& FltNULL::filter(Mat& iframe)
-{
-    _image = &iframe;
-    return iframe;
-}
-
-
-cv::Mat& FltGaussianBlur::filter(cv::Mat& iframe)
-{
-    _image = &iframe;
-
-    cv::GaussianBlur( iframe, iframe, cv::Size(5,5), 3, 3);
-    cv::GaussianBlur( iframe, iframe, cv::Size(5,5), 3, 3);
-    return iframe;
-}
-
-cv::Mat& FltSmaller::filter(cv::Mat& iframe)
-{
-    _image = &iframe;
-    cv::pyrDown( iframe, iframe );
-    return iframe;
-}
-
-cv::Mat& FltCanny::filter(cv::Mat& iframe)
-{
-    _image = &iframe;
-    cv::cvtColor(iframe, iframe, cv::COLOR_BGR2GRAY);
-    cv::Canny( iframe, iframe, 10, 100, 3, true );
     return iframe;
 }
 

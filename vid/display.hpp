@@ -14,10 +14,6 @@ class Display
 private:
     string              _name = "";
 
-protected:
-    map<string,Filter*> _filters;
-    Mat*                _image = NULL;
-
 public:
     Display(string name);
 
@@ -26,5 +22,6 @@ public:
 
     Mat& filter(Mat& frame);
     void display(Mat& frame, string filter = "");
+
     string to_string() { return _name; }
 };

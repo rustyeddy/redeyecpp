@@ -7,6 +7,7 @@
 
 using namespace std;
 
+cv::Mat iframe;
 
 Video::Video(string camstr)
 {
@@ -14,9 +15,8 @@ Video::Video(string camstr)
     _cap.open( camstr );
 }
 
-cv::Mat Video::get_frame()
+cv::Mat& Video::get_frame()
 {
-    cv::Mat iframe;
     _cap >> iframe;
     return iframe;
 }

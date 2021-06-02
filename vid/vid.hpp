@@ -12,7 +12,7 @@ class Video
     
 public:
                 Video(string name);
-    cv::Mat     get_frame();        // add the << operator for reading frames
+    cv::Mat&    get_frame();        // add the << operator for reading frames
 
     double      get_fps()    { return _cap.get( cv::CAP_PROP_FRAME_COUNT ); }
     int         get_width()  { return _cap.get( cv::CAP_PROP_FRAME_WIDTH ); }

@@ -6,6 +6,8 @@ add_executable( vid
                 config.cpp
                 display.cpp
                 filter.cpp
+                filters.cpp
+                filter_default.cpp
                 main.cpp
                 vid.cpp
                 )       
