@@ -2,11 +2,7 @@
 
 #include <string>
 
-#include "display.hpp"
-#include "vid.hpp"
 #include "filters.hpp"
+#include "player.hpp"
+#include "video.hpp"
 
-extern std::string     main_window;
-extern FltFilters*     filters;
-extern Display*        display;
-extern Video*          video;

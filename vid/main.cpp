@@ -2,47 +2,34 @@
 #include <fstream>
 #include <string>
 
+#include <unistd.h>
+
 #include <opencv2/opencv.hpp>
 
-#include "vid.hpp"
-#include "display.hpp"
+#include "config.hpp"
+#include "player.hpp"
 #include "filter.hpp"
 #include "filter_default.hpp"
 #include "filters.hpp"
+#include "video.hpp"
 #include "externs.hpp"
 
 using namespace std;
 
-string          main_window = "Video";
-FltFilters*     filters;
-Display*        display;
-Video*          video;
 
-int main(int argc, char** argv )
+int main(int argc, char* argv[], char *envp[] )
 {
-    if ( argc < 2 )  {
-        cerr << "usage: <videopath> [<filter>] <<" << endl;
-        return -1;
-    }
+    Config *config = new Config( argc, argv, envp );
 
-    display = new Display( main_window );
-    video = new Video( argv[1] );
-    filters = new FltFilters();
-    
+    Player*     player  = new Player( config->get_name() );
+    Video*      video   = config->get_video();
+    Filter*     filter  = config->get_filter();
+
     cv::startWindowThread();
-    for (;;) {
-        cv::Mat iframe = video->get_frame();
-        if (iframe.empty()) break;
 
-        display->display(iframe);   /* display with out a filter */
-        for (int i = 2; i < argc; i++) {
-            display->display(iframe, argv[i]); // display with all the filters */
-        }
-
-        // TODO process input keystrokes here
-        if ( 27 == (char) cv::waitKey(33) ) break;
-    }
+    player->play( video, filter );
 
     cv::destroyAllWindows();
+
     cout << "Goodbye, all done. " << endl;
 }

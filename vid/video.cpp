@@ -3,7 +3,7 @@
 
 #include <opencv2/opencv.hpp>
 
-#include "vid.hpp"
+#include "video.hpp"
 
 using namespace std;
 

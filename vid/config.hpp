@@ -2,14 +2,27 @@
 
 #include <string>
 
+#include "filter.hpp"
+#include "filters.hpp"
+#include "video.hpp"
+
 using namespace std;
 
 class Config
 {
 private:
-    string _fname;
+    string _filter_name;
+    string _vidsrc;
+
+    FltFilters* _filters = NULL;
+    Filter*     _filter = NULL;
 
 public:
-    string      get_fname() { return _fname; }
-    void        set_fname(string s) { _fname = s; }
+    Config( int argc, char *argv[], char *envp[] );
+    int parse_args( int argc, char *argv[], char *envp[] );
+
+    string      get_name() { return _filter_name; }
+
+    Filter*     get_filter();
+    Video*      get_video();
 };

@@ -9,7 +9,7 @@ using namespace cv;
 
 class Filter
 {
-private:
+protected:
     string      _name;
 
 public:

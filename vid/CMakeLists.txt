@@ -4,12 +4,15 @@ find_package( OpenCV REQUIRED )
 include_directories( ${OpenCV_INCLUDE_DIRS} )
 add_executable( vid
                 config.cpp
-                display.cpp
                 filter.cpp
-                filters.cpp
                 filter_default.cpp
+                filter_bigger.cpp
+                filter_magnify.cpp
+                filter_contour.cpp
+                filters.cpp
                 main.cpp
-                vid.cpp
+                player.cpp
+                video.cpp
                 )       
 
 target_link_libraries( vid ${OpenCV_LIBS} )
