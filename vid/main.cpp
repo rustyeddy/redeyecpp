@@ -1,21 +1,13 @@
 #include <iostream>
-#include <fstream>
-#include <string>
-
-#include <unistd.h>
 
 #include <opencv2/opencv.hpp>
 
 #include "config.hpp"
 #include "player.hpp"
 #include "filter.hpp"
-#include "filter_default.hpp"
-#include "filters.hpp"
 #include "video.hpp"
-#include "externs.hpp"
 
 using namespace std;
-
 
 int main(int argc, char* argv[], char *envp[] )
 {

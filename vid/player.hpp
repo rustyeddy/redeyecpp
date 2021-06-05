@@ -25,11 +25,10 @@ public:
     Filter*     get_filter(string name);
 
     void play( Video *vid, Filter *filter = NULL );
-    void display_frame( Mat& frame, Filter *filter = NULL );
+    void display( Mat& frame, Filter *filter = NULL );
 
     string to_string() { return _name; }
 };
 
-// cv::setMouseCallback( name, mouse_callback, (void *) NULL );
 extern void mouse_callback( int event, int x, int y, int flags, void *param );
 

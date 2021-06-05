@@ -33,7 +33,7 @@ void Player::play(Video *vid, Filter *filter)
             break;
         }
 
-        display_frame( iframe, filter );
+        display( iframe, filter );
 
         char ch = cv::waitKey(10);
         if (ch != -1) {
@@ -42,8 +42,7 @@ void Player::play(Video *vid, Filter *filter)
     }
 }
 
-
-void Player::display_frame(Mat& img, Filter *filter)
+void Player::display(Mat& img, Filter *filter)
 {
     Mat &oframe = img;
     if (filter) {
