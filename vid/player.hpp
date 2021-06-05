@@ -24,7 +24,7 @@ public:
     void        add_filter(string name, Filter* f);
     Filter*     get_filter(string name);
 
-    void play( Video *vid, Filter *filter = NULL );
+    void play( Imgsrc *imgsrc, Filter *filter = NULL );
     void display( Mat& frame, Filter *filter = NULL );
 
     string to_string() { return _name; }

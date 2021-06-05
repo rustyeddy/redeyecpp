@@ -14,13 +14,15 @@ int main(int argc, char* argv[], char *envp[] )
     Config *config = new Config( argc, argv, envp );
 
     Player*     player  = new Player( config->get_name() );
-    Video*      video   = config->get_video();
     Filter*     filter  = config->get_filter();
+    Imgsrc*     imgsrc  = config->get_video();
+    if ( imgsrc == NULL ) {
+        imgsrc = config->get_image();
+    }
+    assert(imgsrc);
 
     cv::startWindowThread();
-
-    player->play( video, filter );
-
+    player->play( imgsrc, filter );
     cv::destroyAllWindows();
 
     cout << "Goodbye, all done. " << endl;

@@ -12,6 +12,7 @@ add_executable( vid
                 filter_magnify.cpp
                 filter_contour.cpp
                 filters.cpp
+                image.cpp
                 main.cpp
                 player.cpp
                 video.cpp

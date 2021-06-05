@@ -4,6 +4,7 @@
 
 #include "filter.hpp"
 #include "filters.hpp"
+#include "image.hpp"
 #include "video.hpp"
 
 using namespace std;
@@ -25,4 +26,5 @@ public:
     string      get_name() { return _filter_name; }
     Filter*     get_filter();
     Video*      get_video();
+    Image*      get_image();
 };

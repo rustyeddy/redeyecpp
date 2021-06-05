@@ -22,17 +22,16 @@ Player::Player(string name)
     _ypos += 100;
 }
 
-void Player::play(Video *vid, Filter *filter)
+void Player::play( Imgsrc *isrc, Filter *filter)
 {
     for (;;) {
 
         // XXX - Lock iframe it is global 
-        iframe = vid->get_frame();
-        if ( iframe.empty()) {
+        iframe = isrc->get_frame();
+        if ( iframe.empty() ) {
             cout << "Iframe empty - stopping video..." << endl;
             break;
         }
-
         display( iframe, filter );
 
         char ch = cv::waitKey(10);

@@ -40,7 +40,18 @@ int Config::parse_args( int argc, char *argv[], char *envp[] )
 Video*  Config::get_video()
 {
     if ( _video_name == "" ) return NULL;
-    return new Video( _video_name );
+    Video *vid = new Video( _video_name );
+    return vid;
+}
+
+Image*  Config::get_image()
+{
+    if ( _file_name  == "" ) {
+        cerr << "Must specify an image to display. " << endl;
+        exit(-5);
+    }
+    Image *img = new Image( _file_name );
+    return img;
 }
 
 Filter* Config::get_filter()

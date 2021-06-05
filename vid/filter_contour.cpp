@@ -21,6 +21,12 @@ cv::Mat& FltContour::filter(cv::Mat& img)
         init = false;
     }
 
+    if (iframe.empty()) {
+        cerr << "IFrame is empty, exiting..." << endl;
+        exit(-5);
+    }
+    
+
     cv::Mat bin;
     cv::threshold( iframe, bin, get_threshold(), 255, cv::THRESH_BINARY );
     vector< vector< cv::Point> > contours;
