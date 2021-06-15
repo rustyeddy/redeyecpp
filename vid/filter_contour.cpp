@@ -26,9 +26,12 @@ cv::Mat& FltContour::filter(cv::Mat& img)
         exit(-5);
     }
     
-
     cv::Mat bin;
     cv::threshold( iframe, bin, get_threshold(), 255, cv::THRESH_BINARY );
+
+    cv::imshow( "bin", bin );
+
+    // XXX - this messes up.
     vector< vector< cv::Point> > contours;
     cv::findContours( bin, contours, cv::noArray(), cv::RETR_LIST, cv::CHAIN_APPROX_SIMPLE );
     bin = cv::Scalar::all(0);
