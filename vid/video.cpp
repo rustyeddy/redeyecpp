@@ -36,6 +36,7 @@ cv::Mat& Video::get_frame()
     return iframe;
 }
 
+// get_tegra()
 string Video::get_tegra(int width, int height, int fps)
 {
     return "nvarguscamerasrc ! video/x-raw(memory:NVMM), width=(int)" + ::to_string(width) + ", height=(int)" +

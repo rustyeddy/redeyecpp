@@ -34,10 +34,35 @@ void Player::play( Imgsrc *isrc, Filter *filter)
         }
         display( iframe, filter );
 
-        char ch = cv::waitKey(10);
-        if (ch != -1) {
-            cout << "We got key char " << ::to_string(ch) << endl;            
-        }
+        // char ch = cv::waitKey(1);
+	// continue;
+        // if (ch != -1) {
+
+	//     //cout << "We got key char " << ::to_string(ch) << endl;
+
+	//     switch (ch) {
+
+	//     // case 'p':
+	//     // 	cout << "TODO Take a picture." << endl;
+	//     // 	break;
+
+	//     // case 'r':
+	//     // 	cout << "TODO Start recording." << endl;
+	//     // 	break;
+
+	//     // case 's':
+	//     // 	cout << "TODO Stop recording." << endl;
+	//     // 	break;
+
+	//     case 255:
+	// 	continue;
+	// 	break;
+
+	//     default:
+	// 	cout << "We got key char " << ::to_string(ch) << endl;
+	// 	break;
+	//     }
+        // }
     }
 }
 
