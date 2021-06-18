@@ -1,6 +1,6 @@
 #include <list>
 #include <opencv2/opencv.hpp>
-#include "filter.hpp"
+#include "filters/filter.hpp"
 #include "player.hpp"
 #include "externs.hpp"
 

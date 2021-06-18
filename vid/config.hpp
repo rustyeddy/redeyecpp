@@ -2,8 +2,8 @@
 
 #include <string>
 
-#include "filter.hpp"
-#include "filters.hpp"
+#include "filters/filter.hpp"
+#include "filters/filters.hpp"
 #include "image.hpp"
 #include "video.hpp"
 

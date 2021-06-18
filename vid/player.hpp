@@ -4,7 +4,7 @@
 #include <map>
 
 #include <opencv2/opencv.hpp>
-#include "filter.hpp"
+#include "filters/filter.hpp"
 #include "video.hpp"
 
 using namespace std;

@@ -4,7 +4,7 @@
 
 #include "config.hpp"
 #include "player.hpp"
-#include "filter.hpp"
+#include "filters/filter.hpp"
 #include "video.hpp"
 
 using namespace std;
