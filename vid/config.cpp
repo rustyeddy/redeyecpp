@@ -13,7 +13,7 @@ Config::Config( int argc, char *argv[], char *envp[ ] )
 int Config::parse_args( int argc, char *argv[], char *envp[] )
 {
     int opt;
-    while ((opt = getopt(argc, argv, "f:i:nv:")) != -1) {
+    while ((opt = getopt(argc, argv, "f:i:tv:")) != -1) {
         switch (opt) {
         case 'f':
             _filter_name = optarg;
@@ -32,8 +32,8 @@ int Config::parse_args( int argc, char *argv[], char *envp[] )
 	    break;
 
         default:
-            cerr << "ERROR unknown option: " << opt << endl;
-            cerr << "Usage: vid [-v <videodev>] [-f <filter-name>] [-i <image-name>]" << endl;
+            cerr << "ERROR unknown option: " << to_string(opt) << endl;
+            cerr << "Usage: vid [-t] [-v <videodev>] [-f <filter-name>] [-i <image-name>]" << endl;
             break;
         }
     }

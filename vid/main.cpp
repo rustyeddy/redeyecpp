@@ -22,8 +22,9 @@ int main(int argc, char* argv[], char *envp[] )
     assert(imgsrc);
 
     cv::startWindowThread();
-    player->play( imgsrc, filter );
-    cv::destroyAllWindows();
 
+    player->play( imgsrc, filter );
+
+    cv::destroyAllWindows();
     cout << "Goodbye, all done. " << endl;
 }

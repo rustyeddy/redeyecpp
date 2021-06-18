@@ -17,6 +17,7 @@ cv::Mat& FltCanny::filter(cv::Mat& img)
 
 cv::Mat& FltSmaller::filter(cv::Mat& img)
 {
+    cout << "SMALLER" << img.empty() << endl;
     cv::pyrDown( img, img );
     return img;
 }

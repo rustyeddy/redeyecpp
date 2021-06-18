@@ -16,6 +16,9 @@ public:
     Filter(string n);
 
     string Name();       
-    virtual Mat& filter(Mat& iframe) = 0;
     string to_string() { return _name; }
+
+    // All derivative classes must implement the filter method to
+    // simply transform an image into another one.
+    virtual Mat& filter(Mat& iframe) = 0;
 };

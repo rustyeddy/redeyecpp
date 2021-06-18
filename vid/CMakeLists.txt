@@ -14,5 +14,5 @@ add_executable( vid
                 video.cpp
                 )       
 
-
+set(CMAKE_BUILD_TYPE Debug)
 target_link_libraries( vid ${OpenCV_LIBS} Filters )
