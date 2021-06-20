@@ -13,6 +13,7 @@ class Config
 {
 private:
     string _filter_name         = "";
+
     string _video_name          = "";
     string _file_name           = "";
     string _gstreamer           = "";

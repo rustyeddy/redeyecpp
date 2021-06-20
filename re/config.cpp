@@ -33,7 +33,7 @@ int Config::parse_args( int argc, char *argv[], char *envp[] )
 
         default:
             cerr << "ERROR unknown option: " << to_string(opt) << endl;
-            cerr << "Usage: vid [-t] [-v <videodev>] [-f <filter-name>] [-i <image-name>]" << endl;
+            cerr << "Usage: re [-t | -v <videodev> | -i image] [-f <filter-name>]" << endl;
             break;
         }
     }

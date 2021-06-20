@@ -23,6 +23,8 @@ int main(int argc, char* argv[], char *envp[] )
 
     cv::startWindowThread();
 
+    // The player will announce it's presence on the channel '/redeye/announce/<camera-id>' 
+    // and listen for commands on this '/redeye/camera/<camera-id>/cmd' channel.
     player->play( imgsrc, filter );
 
     cv::destroyAllWindows();

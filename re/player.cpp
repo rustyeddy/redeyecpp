@@ -1,13 +1,16 @@
 #include <list>
 #include <opencv2/opencv.hpp>
-#include "filters/filter.hpp"
-#include "player.hpp"
 #include "externs.hpp"
+#include "filters/filter.hpp"
+#include "mqtt.hpp"
+#include "player.hpp"
+
 
 using namespace cv;
 using namespace std;
 
 extern cv::Mat iframe;          // XXX declare properly
+extern cv::Mat nframe;
 
 Player::Player(string name)
 {
@@ -24,6 +27,10 @@ Player::Player(string name)
 
 void Player::play( Imgsrc *isrc, Filter *filter)
 {
+    mqtt_connect();
+
+    // TODO - Add message channel allowing external people or programs
+    // can communicate with our player
     for (;;) {
 
         // XXX - Lock iframe it is global 

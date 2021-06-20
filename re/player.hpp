@@ -15,7 +15,6 @@ class Player
 private:
     string              _name = "";
     list<string>        _windows;
-
     int                 _xpos = 100, _ypos = 100;
 
 public:
