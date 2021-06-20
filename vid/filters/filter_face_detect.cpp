@@ -98,7 +98,7 @@ Mat& FltHaarCascade::detectAndDraw( Mat img )
         }
 
         smallImgROI = smallImg( r );
-        _eyes_cascade.detectMultiScale( smallImgROI, nestedObjects, 1.1, 2, 0|CASCADE_SCALE_IMAGE, Size(30, 30) );
+        _eyes_cascade.detectMultiScale( smallImgROI, nestedObjects, 1.1, 2, 0|CASCADE_SCALE_IMAGE, Size(30, 30), Size(30, 30) );
 
         cout << "Nested object count: " << ::to_string(nestedObjects.size()) << endl;
         for ( size_t j = 0; j < nestedObjects.size(); j++ ){
