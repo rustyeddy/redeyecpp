@@ -2,7 +2,9 @@
 #include "filter_default.hpp"
 #include "filter_bigger.hpp"
 #include "filter_contour.hpp"
+#include "filter_face_detect.hpp"
 #include "filter_magnify.hpp"
+
 #include "filters.hpp"
 
 FltFilters::FltFilters() {
@@ -10,6 +12,7 @@ FltFilters::FltFilters() {
     add( "bigger", new FltBigger() );
     add( "contour", new FltContour() ); 
     add( "canny", new FltCanny() );
+    add( "face-detect", new FltHaarCascade() );
     add( "gaussian", new FltGaussianBlur() );
     add( "smaller", new FltSmaller() );
     add( "resize", new FltResize() );

@@ -32,7 +32,7 @@ void Player::play( Imgsrc *isrc, Filter *filter)
             cout << "Iframe empty - stopping video..." << endl;
             break;
         }
-        display( iframe, filter );
+        display( iframe, filter );            
 
         // char ch = cv::waitKey(1);
 	// continue;
@@ -68,12 +68,10 @@ void Player::play( Imgsrc *isrc, Filter *filter)
 
 void Player::display(Mat& img, Filter *filter)
 {
-    Mat &oframe = img;
     if (filter) {
-        oframe = filter->filter(img);                            
+        img = filter->filter(img);
     }
-    moveWindow( filter->Name(), _xpos, _ypos );
-    imshow( filter->Name(), oframe);
+    imshow( _name, img );
 }
 
 void mouse_callback( int event, int x, int y, int flags, void *param )
