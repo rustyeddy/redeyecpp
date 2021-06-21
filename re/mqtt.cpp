@@ -39,6 +39,5 @@ int MQTTClient::connect()
 
 int MQTTClient::publish(string topic, string msg)
 {
-    string s("redeye");
     return mosquitto_publish( _mosq, NULL, topic.c_str(), msg.length(), msg.c_str(), 0, false );
 }
