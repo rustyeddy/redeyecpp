@@ -25,21 +25,19 @@ Player::Player(string name)
     _ypos += 100;
 }
 
-void Player::play( Imgsrc *isrc, Filter *filter)
+void Player::play( )
 {
-    mqtt_connect();
-
     // TODO - Add message channel allowing external people or programs
     // can communicate with our player
     for (;;) {
 
         // XXX - Lock iframe it is global 
-        iframe = isrc->get_frame();
+        iframe = _imgsrc->get_frame();
         if ( iframe.empty() ) {
             cout << "Iframe empty - stopping video..." << endl;
             break;
         }
-        display( iframe, filter );            
+        display( iframe, _filter );            
     }
 }
 

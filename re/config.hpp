@@ -17,6 +17,7 @@ private:
     string _video_name          = "";
     string _file_name           = "";
     string _gstreamer           = "";
+    string _mqtt_broker         = "";
 
     FltFilters* _filters        = NULL;
     Filter*     _filter         = NULL;
@@ -29,4 +30,6 @@ public:
     Filter*     get_filter();
     Video*      get_video();
     Image*      get_image();
+
+    string      get_mqtt_broker();
 };

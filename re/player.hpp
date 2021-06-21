@@ -17,13 +17,17 @@ private:
     list<string>        _windows;
     int                 _xpos = 100, _ypos = 100;
 
+    Filter*             _filter = NULL;
+    Imgsrc*             _imgsrc;
+
 public:
     Player( string name );
 
-    void        add_filter(string name, Filter* f);
+    void        add_imgsrc(Imgsrc *i) { _imgsrc = i; }
+    void        add_filter(Filter* f) { _filter = f; }
     Filter*     get_filter(string name);
 
-    void play( Imgsrc *imgsrc, Filter *filter = NULL );
+    void play( );
     void display( Mat& frame, Filter *filter = NULL );
 
     string to_string() { return _name; }

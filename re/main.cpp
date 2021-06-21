@@ -1,32 +1,52 @@
 #include <iostream>
+#include <thread>
 
 #include <opencv2/opencv.hpp>
 
 #include "config.hpp"
+#include "mqtt.hpp"
 #include "player.hpp"
-#include "filters/filter.hpp"
 #include "video.hpp"
+#include "filters/filter.hpp"
 
 using namespace std;
+
+MQTTClient *mqtt = NULL;
+
+void *play_video( void *p )
+{
+    Player *player = (Player *) p;
+    player->play( );
+    return p;
+}
 
 int main(int argc, char* argv[], char *envp[] )
 {
     Config *config = new Config( argc, argv, envp );
 
+    MQTTClient* mqtt    = new MQTTClient();
     Player*     player  = new Player( config->get_name() );
-    Filter*     filter  = config->get_filter();
-    Imgsrc*     imgsrc  = config->get_video();
-    if ( imgsrc == NULL ) {
-        imgsrc = config->get_image();
+
+    player->add_filter(config->get_filter());
+    player->add_imgsrc(config->get_video());
+
+    int rc = mqtt->connect();
+    if (rc < 0) {
+        clog << "MQTT Error connecting to broker, run without broker" << endl;
+        delete mqtt;
+        mqtt = NULL;
     }
-    assert(imgsrc);
+
+    if ( mqtt ) {
+        mqtt->publish("redeye/announce/camera", "re1");
+    }
 
     cv::startWindowThread();
 
-    // The player will announce it's presence on the channel '/redeye/announce/<camera-id>' 
-    // and listen for commands on this '/redeye/camera/<camera-id>/cmd' channel.
-    player->play( imgsrc, filter );
+    pthread_t t_player;
+    pthread_create(&t_player, NULL, &play_video, player);
 
+    pthread_join(t_player, NULL);
     cv::destroyAllWindows();
     cout << "Goodbye, all done. " << endl;
 }

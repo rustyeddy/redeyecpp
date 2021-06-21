@@ -19,4 +19,4 @@ set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -ggdb -ffunction-sections")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -ggdb -ffunction-sections")
 set(CMAKE_BUILD_TYPE Debug)
                      
-target_link_libraries( re ${OpenCV_LIBS} -lmosquitto Filters )
+target_link_libraries( re ${OpenCV_LIBS} -lmosquitto -lpthread Filters )
