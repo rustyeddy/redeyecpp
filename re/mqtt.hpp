@@ -15,9 +15,12 @@ public:
     MQTTClient();
     ~MQTTClient();
 
+    struct mosquitto    *get_mosq() { return _mosq; }
+
     int connect();
     int publish(std::string topic, std::string msg);
+    int subscribe( std::string topic, void *callback(void *p) );
+
 };
 
-
-extern int mqtt_connect();
+extern MQTTClient *mqtt;

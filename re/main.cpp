@@ -37,14 +37,17 @@ int main(int argc, char* argv[], char *envp[] )
         mqtt = NULL;
     }
 
-    if ( mqtt ) {
-        mqtt->publish("redeye/announce/camera", "re1");
-    }
-
     cv::startWindowThread();
 
     pthread_t t_player;
     pthread_create(&t_player, NULL, &play_video, player);
+
+    if ( mqtt ) {
+        cout << "Mosquitto loop " << endl;
+        rc = mosquitto_loop( mqtt->get_mosq(), -1, -1 );
+    }
+
+
 
     pthread_join(t_player, NULL);
     cv::destroyAllWindows();
