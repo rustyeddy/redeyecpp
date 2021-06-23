@@ -33,3 +33,5 @@ public:
 
     string      get_mqtt_broker();
 };
+
+extern Config *config;

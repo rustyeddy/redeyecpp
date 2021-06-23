@@ -13,8 +13,12 @@ Config::Config( int argc, char *argv[], char *envp[ ] )
 int Config::parse_args( int argc, char *argv[], char *envp[] )
 {
     int opt;
-    while ((opt = getopt(argc, argv, "f:i:tv:")) != -1) {
+    while ((opt = getopt(argc, argv, "b:f:i:tv:")) != -1) {
         switch (opt) {
+        case 'b':
+            _mqtt_broker = optarg;
+            break;
+
         case 'f':
             _filter_name = optarg;
             break;
@@ -23,17 +27,18 @@ int Config::parse_args( int argc, char *argv[], char *envp[] )
             _file_name = optarg;
             break;
 
-        case 'v':
-            _video_name = optarg;
-            break;
-
 	case 't':
 	    _video_name = "tegra";
 	    break;
 
+        case 'v':
+            _video_name = optarg;
+            break;
+
         default:
             cerr << "ERROR unknown option: " << to_string(opt) << endl;
             cerr << "Usage: re [-t | -v <videodev> | -i image] [-f <filter-name>]" << endl;
+            exit(1);
             break;
         }
     }
