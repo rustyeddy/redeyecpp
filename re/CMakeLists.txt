@@ -8,6 +8,7 @@ find_package( OpenCV REQUIRED )
 include_directories( ${OpenCV_INCLUDE_DIRS} )
 add_executable( re
                 config.cpp
+                cmd.cpp
                 image.cpp
                 main.cpp
                 mqtt.cpp

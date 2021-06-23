@@ -6,6 +6,7 @@
 #include <mosquitto.h>
 
 #include "config.hpp"
+#include "cmd.hpp"
 #include "mqtt.hpp"
 
 using namespace std;
@@ -13,7 +14,12 @@ using namespace std;
 extern string ID;
 static struct mosquitto *g_mosq = NULL;
 
-void mqtt_subscribe_callback(struct mosquitto *mosq, void *userdata, int mid, int qos_count, const int *granted_qos)
+static string mqtt_id_topic()
+{
+    return "redeye/camera/" + ID;
+}
+
+static void mqtt_subscribe_callback(struct mosquitto *mosq, void *userdata, int mid, int qos_count, const int *granted_qos)
 {
     int i;
 
@@ -24,12 +30,12 @@ void mqtt_subscribe_callback(struct mosquitto *mosq, void *userdata, int mid, in
     printf("\n");
 }
 
-void mqtt_log_callback(struct mosquitto *mosq, void *userdata, int level, const char *str)
+static void mqtt_log_callback(struct mosquitto *mosq, void *userdata, int level, const char *str)
 {
     clog << "MQTT" << str << endl;
 }
 
-void mqtt_connect_callback(struct mosquitto *mosq, void *userdata, int result)
+static void mqtt_connect_callback(struct mosquitto *mosq, void *userdata, int result)
 {
     int i;
     if( result ) {
@@ -42,10 +48,18 @@ void mqtt_connect_callback(struct mosquitto *mosq, void *userdata, int result)
     mqtt_publish("redeye/announce/camera", ID.c_str());
 }
 
-void mqtt_message_callback(struct mosquitto *mosq, void *obj, const struct mosquitto_message *msg)
+static void mqtt_message_callback(struct mosquitto *mosq, void *obj, const struct mosquitto_message *msg)
 {
     bool match = 0;
-    printf("MQTT Message topic: %d - %s - %s\n", msg->payloadlen, (char *) msg->payload, msg->topic);
+    printf("MQTT Message topic: %s - %d - %s\n", msg->topic, msg->payloadlen, (char *) msg->payload);
+
+    if ( msg->topic == mqtt_id_topic() ) {
+        cout << "MQTT CMD sent to us: " << (char *) msg->payload << endl;
+
+        cmd_runner( (char *) msg->payload );
+
+        return;
+    }
 }
 
 int mqtt_publish(string topic, string msg)
