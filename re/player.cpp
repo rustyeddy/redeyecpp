@@ -49,6 +49,13 @@ void Player::display(Mat& img, Filter *filter)
     imshow( _name, img );
 }
 
+void *play_video( void *p )
+{
+    Player *player = (Player *) p;
+    player->play( );
+    return p;
+}
+
 void mouse_callback( int event, int x, int y, int flags, void *param )
 {
     Filter *f = NULL;

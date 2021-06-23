@@ -5,28 +5,32 @@
 
 #include "config.hpp"
 #include "mqtt.hpp"
+#include "net.hpp"
 #include "player.hpp"
 #include "video.hpp"
 #include "filters/filter.hpp"
 
 Config *config;
+string ID = "";
 
 using namespace std;
 
-void* play_video( void *p );
 int main(int argc, char* argv[], char *envp[] )
 {
     config = new Config( argc, argv, envp );
 
+    ID = get_ip_address("eno1");
+
     pthread_t t_mqtt;
-    pthread_create(&t_mqtt, NULL, mqtt_loop, NULL);
+    pthread_t t_player;
+    
+    pthread_create(&t_mqtt, NULL, mqtt_loop, (char *)ID.c_str());
 
     Player*     player  = new Player( config->get_name() );
     player->add_filter(config->get_filter());
     player->add_imgsrc(config->get_video());
 
     cv::startWindowThread();
-    pthread_t t_player;
     pthread_create(&t_player, NULL, &play_video, player);
     cv::destroyAllWindows();
     
@@ -36,12 +40,3 @@ int main(int argc, char* argv[], char *envp[] )
     cout << "Goodbye, all done. " << endl;
     exit(0);
 }
-
-
-void *play_video( void *p )
-{
-    Player *player = (Player *) p;
-    player->play( );
-    return p;
-}
-

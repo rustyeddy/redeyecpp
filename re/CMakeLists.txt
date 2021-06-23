@@ -11,6 +11,7 @@ add_executable( re
                 image.cpp
                 main.cpp
                 mqtt.cpp
+                net.cpp
                 player.cpp
                 video.cpp
                 )       
