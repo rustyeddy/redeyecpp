@@ -35,7 +35,8 @@ void Player::play( )
 {
     // TODO - Add message channel allowing external people or programs
     // can communicate with our player
-    for (;;) {
+    bool running = true;
+    while ( running ) {
 
         // XXX - Lock iframe it is global 
         iframe = _imgsrc->get_frame();
@@ -44,17 +45,29 @@ void Player::play( )
             break;
         }
 
-        if (! _cmdlist.empty() ) {
-            string cmd = _cmdlist.back();
-            _cmdlist.pop_back();
+        display( iframe, _filter );            
 
-            if ( cmd == "snap" ) {
-                // Save image to file.
-                cout << "We have an iframe to save to file ... " << endl;
-            }
+        if ( _cmdlist.empty() ) {
+            continue;
         }
 
-        display( iframe, _filter );            
+        string cmd = _cmdlist.back();
+        _cmdlist.pop_back();
+
+        if ( cmd == "snap" ) {
+            // Save image to file.
+            cout << "We have an iframe to save to file ... " << endl;
+            save_image( iframe );
+
+        } else if ( cmd == "record" ) {
+
+            cout << "We have a frame from video to save ... " << endl;
+            // save_video( );
+
+        } default {
+
+            cerr << "We have no support for: " << cmd << endl;
+        }
     }
 }
 
@@ -65,6 +78,13 @@ void Player::display(Mat& img, Filter *filter)
     }
     imshow( _name, img );
 }
+
+int Player::save_image( Mat& img )
+{
+    assert(false)  START HERE
+    return 0;
+}
+
 
 void *play_video( void *p )
 {

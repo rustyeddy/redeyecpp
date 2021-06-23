@@ -31,10 +31,12 @@ public:
 
     void        command_request(string s);
 
-    void play( );
-    void display( Mat& frame, Filter *filter = NULL );
+    void        play( );
+    void        display( Mat& frame, Filter *filter = NULL );
 
-    string to_string() { return _name; }
+    int         save_image( Mat& frame );
+
+    string      to_string() { return _name; }
 };
 
 extern Player* player;
