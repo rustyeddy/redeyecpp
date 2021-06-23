@@ -20,6 +20,8 @@ private:
     Filter*             _filter = NULL;
     Imgsrc*             _imgsrc;
 
+    list<string>        _cmdlist;
+
 public:
     Player( string name );
 
@@ -27,12 +29,15 @@ public:
     void        add_filter(Filter* f) { _filter = f; }
     Filter*     get_filter(string name);
 
+    void        command_request(string s);
+
     void play( );
     void display( Mat& frame, Filter *filter = NULL );
 
     string to_string() { return _name; }
 };
 
+extern Player* player;
 extern void* play_video( void *p ); // callback for pthreads
 extern void mouse_callback( int event, int x, int y, int flags, void *param );
 

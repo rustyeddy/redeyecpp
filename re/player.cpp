@@ -25,6 +25,12 @@ Player::Player(string name)
     _ypos += 100;
 }
 
+void Player::command_request(string s)
+{
+    cout << "Putting: " << s << " on command Q" << endl;
+    _cmdlist.push_back(s);
+}
+
 void Player::play( )
 {
     // TODO - Add message channel allowing external people or programs
@@ -37,6 +43,17 @@ void Player::play( )
             cout << "Iframe empty - stopping video..." << endl;
             break;
         }
+
+        if (! _cmdlist.empty() ) {
+            string cmd = _cmdlist.back();
+            _cmdlist.pop_back();
+
+            if ( cmd == "snap" ) {
+                // Save image to file.
+                cout << "We have an iframe to save to file ... " << endl;
+            }
+        }
+
         display( iframe, _filter );            
     }
 }

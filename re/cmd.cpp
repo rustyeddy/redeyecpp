@@ -1,5 +1,7 @@
 #include <iostream>
+
 #include "cmd.hpp"
+#include "player.hpp"
 
 using namespace std;
 
@@ -10,6 +12,7 @@ void cmd_runner( char *cmdstr )
 
     if ( cmd == "snap" ) {
         cout << "CMD snap " << endl;
+        player->command_request("snap");
     } else if ( cmd == "record" ) {
         cout << "CMD record " << endl;            
     } else if ( cmd == "pause" ) {

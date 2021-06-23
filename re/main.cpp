@@ -11,6 +11,8 @@
 #include "filters/filter.hpp"
 
 Config *config;
+Player *player;
+
 string ID = "";
 
 using namespace std;
@@ -26,16 +28,20 @@ int main(int argc, char* argv[], char *envp[] )
     
     pthread_create(&t_mqtt, NULL, mqtt_loop, (char *)ID.c_str());
 
-    Player*     player  = new Player( config->get_name() );
+    player  = new Player( config->get_name() );
     player->add_filter(config->get_filter());
     player->add_imgsrc(config->get_video());
 
     cv::startWindowThread();
+
+    // player will create an event loop for commands and handle
+    // player messaging 
     pthread_create(&t_player, NULL, &play_video, player);
+
     cv::destroyAllWindows();
     
     pthread_join(t_mqtt, NULL);
-    pthread_join(t_player, NULL);
+    pthread_join(t_player, NULL); 
 
     cout << "Goodbye, all done. " << endl;
     exit(0);
