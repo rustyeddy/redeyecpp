@@ -63,6 +63,7 @@ void Player::play( )
 #endif // TODO
 
         if ( cmd == "snap" ) {
+
             // Save image to file.
             cout << "We have an iframe to save to file ... " << endl;
             save_image( iframe );

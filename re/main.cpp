@@ -21,7 +21,8 @@ int main(int argc, char* argv[], char *envp[] )
 {
     config = new Config( argc, argv, envp );
 
-    ID = get_ip_address("eno1");
+    // TODO: this will need to be fixed for other machines
+    ID = get_ip_address("eno1"); 
 
     pthread_t t_mqtt;
     pthread_t t_player;
@@ -29,8 +30,8 @@ int main(int argc, char* argv[], char *envp[] )
     pthread_create(&t_mqtt, NULL, mqtt_loop, (char *)ID.c_str());
 
     player  = new Player( config->get_name() );
-    player->add_filter(config->get_filter());
-    player->add_imgsrc(config->get_video());
+    player->add_filter( config->get_filter() );
+    player->add_imgsrc( config->get_video() );
 
     cv::startWindowThread();
 
