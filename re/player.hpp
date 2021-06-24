@@ -22,12 +22,19 @@ private:
 
     list<string>        _cmdlist;
 
+    VideoWriter*        _video_writer;
+
 public:
     Player( string name );
 
     void        add_imgsrc(Imgsrc *i) { _imgsrc = i; }
     void        add_filter(Filter* f) { _filter = f; }
     Filter*     get_filter(string name);
+
+    string      snapshot_filename()  { return "redeye-snapshot.png"; }
+    string      video_filename()        { return "redeye-video.mp4"; }
+
+    VideoWriter* get_video_writer();
 
     void        command_request(string s);
 
