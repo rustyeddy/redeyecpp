@@ -1,4 +1,5 @@
 #include <list>
+#include <vector>
 #include <opencv2/opencv.hpp>
 #include "externs.hpp"
 #include "filters/filter.hpp"
@@ -9,8 +10,8 @@
 using namespace cv;
 using namespace std;
 
-extern cv::Mat iframe;          // XXX declare properly
-extern cv::Mat nframe;
+extern Mat iframe;          // XXX declare properly
+extern Mat nframe;
 
 Player::Player(string name)
 {
@@ -35,7 +36,8 @@ void Player::play( )
 {
     // TODO - Add message channel allowing external people or programs
     // can communicate with our player
-    for (;;) {
+    bool running = true;
+    while ( running ) {
 
         // XXX - Lock iframe it is global 
         iframe = _imgsrc->get_frame();
@@ -44,18 +46,59 @@ void Player::play( )
             break;
         }
 
-        if (! _cmdlist.empty() ) {
-            string cmd = _cmdlist.back();
-            _cmdlist.pop_back();
+        display( iframe, _filter );            
 
-            if ( cmd == "snap" ) {
-                // Save image to file.
-                cout << "We have an iframe to save to file ... " << endl;
-            }
+        if ( _cmdlist.empty() ) {
+            continue;
         }
 
-        display( iframe, _filter );            
+        string cmd = _cmdlist.back();
+        _cmdlist.pop_back();
+
+#ifdef TODO
+        if ( _saving_video ) {
+            _video_writer = get_video_writer();
+            _video_writer << iframe;
+        }
+#endif // TODO
+
+        if ( cmd == "snap" ) {
+            // Save image to file.
+            cout << "We have an iframe to save to file ... " << endl;
+            save_image( iframe );
+
+        } else if ( cmd == "record" ) {
+
+            cout << "We have a frame from video to save ... " << endl;
+            // save_video( );
+
+        } else {
+
+            cerr << "We have no support for: " << cmd << endl;
+        }
     }
+}
+
+VideoWriter* Player::get_video_writer()
+{
+    if ( _video_writer == NULL ) {
+        _video_writer = new VideoWriter("redeye-video.mp4",
+                                        VideoWriter::fourcc('m', 'p', '4', 'v'),
+                                        30.0,
+                                        Size(640, 480),
+                                        true);
+    }
+    return _video_writer;
+}
+
+int Player::save_image( Mat& img )
+{
+    vector<int> compression_params;
+    compression_params.push_back(IMWRITE_PNG_COMPRESSION);
+    compression_params.push_back(9);
+
+    int result = imwrite("redeye-image.png", img, compression_params);
+    return result;
 }
 
 void Player::display(Mat& img, Filter *filter)
