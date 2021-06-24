@@ -32,6 +32,24 @@ void Player::command_request(string s)
     _cmdlist.push_back(s);
 }
 
+void Player::record()
+{
+    _recording = true;
+
+    if ( _video_writer == NULL ) {
+        _video_writer = get_video_writer();
+    }
+    assert( _video_writer );
+}
+
+void Player::stop()
+{
+    _recording = false;
+    if ( _video_writer != NULL ) {
+        delete _video_writer;
+    }
+}
+
 void Player::play( )
 {
     // TODO - Add message channel allowing external people or programs
@@ -52,15 +70,16 @@ void Player::play( )
             continue;
         }
 
+        if ( _recording ) {
+            assert( _video_writer );
+            *_video_writer << iframe;            
+        } else if ( _video_writer != NULL ) {
+            delete _video_writer;
+            _video_writer = NULL;
+        }
+
         string cmd = _cmdlist.back();
         _cmdlist.pop_back();
-
-#ifdef TODO
-        if ( _saving_video ) {
-            _video_writer = get_video_writer();
-            _video_writer << iframe;
-        }
-#endif // TODO
 
         if ( cmd == "snap" ) {
 
@@ -71,7 +90,11 @@ void Player::play( )
         } else if ( cmd == "record" ) {
 
             cout << "We have a frame from video to save ... " << endl;
-            // save_video( );
+            record();
+
+        } else if ( cmd == "stop" ) {
+            cout << "We have recieved a stop command " << endl;
+            stop();
 
         } else {
 

@@ -24,6 +24,8 @@ private:
 
     VideoWriter*        _video_writer;
 
+    bool                _recording = false;
+
 public:
     Player( string name );
 
@@ -36,10 +38,12 @@ public:
 
     VideoWriter* get_video_writer();
 
-    void        command_request(string s);
-
-    void        play( );
+    void        play();
+    void        record();
+    void        stop();
     void        display( Mat& frame, Filter *filter = NULL );
+
+    void        command_request(string s);
 
     int         save_image( Mat& frame );
 
