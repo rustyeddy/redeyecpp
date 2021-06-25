@@ -24,7 +24,9 @@ public:
     Config( int argc, char *argv[], char *envp[] );
     int parse_args( int argc, char *argv[], char *envp[] );
 
-    string      get_filter_name() { return _filter_name; }
+    string      get_filter_name()       { return _filter_name; }
+    string      get_video_name()        { return _video_name; }
+
     Video*      get_video();
     Image*      get_image();
 
