@@ -74,12 +74,12 @@ void Player::play( )
             break;
         }
 
-        display( iframe, _filter );            
-
-        if ( _cmdlist.empty() ) {
-            continue;
+        // empty the frames, but do not display them nor save them.
+        if ( ! _paused ) {
+            display( iframe, _filter );            
         }
 
+        // if we are recording, write the frame to the video writer
         if ( _recording ) {
             assert( _video_writer );
             *_video_writer << iframe;            
@@ -88,6 +88,12 @@ void Player::play( )
             _video_writer = NULL;
         }
 
+        // Check for incoming commands
+        if ( _cmdlist.empty() ) {
+            continue;
+        }
+
+        // If there are incoming commands, handle them here
         string cmd = _cmdlist.back();
         _cmdlist.pop_back();
 
@@ -96,6 +102,16 @@ void Player::play( )
             // Save image to file.
             cout << "We have an iframe to save to file ... " << endl;
             save_image( iframe );
+
+        } else if ( cmd == "pause" ) {
+
+            cout << "We are being paused ... " << endl;
+            _paused = true;
+
+        } else if ( cmd == "play" ) {
+
+            cout << "Play has been pushed ... " << endl;
+            _paused = false;
 
         } else if ( cmd == "record" ) {
 

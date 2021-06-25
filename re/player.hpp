@@ -24,6 +24,7 @@ private:
     VideoWriter*        _video_writer;
 
     bool                _recording = false;
+    bool                _paused = false;
 
 public:
     Player( string name );
@@ -37,6 +38,8 @@ public:
     VideoWriter* get_video_writer();
 
     void        play();
+    void        pause();
+
     void        record();
     void        stop();
     void        display( Mat& frame, Filter *filter = NULL );
