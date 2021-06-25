@@ -26,6 +26,7 @@ void mjpeg_cb(const httplib::Request &, httplib::Response &res)
     res.set_header("Pragma", "no-cache");
     res.set_header("Content-Type", "multipart/x-mixed-replace;boundary=--boundary");
 
+#ifdef ntonotw
     bool running = true;
     while (running) {
 
@@ -44,13 +45,14 @@ void mjpeg_cb(const httplib::Request &, httplib::Response &res)
         // res.set_content( content, "image/jpeg" ); // XXX this will fail!
         // int rc = write( res.socket, content.c_str(), content.length() )
 
-#ifdef ntonotw
+
         res.set_content( "--JPEG-START", "" );        
         res.set_header("Content-Type", "image/jpeg");
         res.set_header("Content-Len", size);
         res.set_header("X-Timestamp", "0.000000");
-#endif // notnow
     }
+#endif // notnow
+
 }
 
 void get_cameras_cb(const httplib::Request &, httplib::Response &res)
