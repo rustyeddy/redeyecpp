@@ -8,15 +8,30 @@
 #include "config.hpp"
 #include "cmd.hpp"
 #include "mqtt.hpp"
+#include "player.hpp"
 
 using namespace std;
 
 extern string ID;
 static struct mosquitto *g_mosq = NULL;
 
-static string mqtt_id_topic()
+int mqtt_publish(string topic, string msg)
 {
-    return "redeye/camera/" + ID;
+    int mid;
+    return mosquitto_publish( g_mosq, NULL, topic.c_str(), msg.length(), msg.c_str(), 0, false );
+}
+
+static string mqtt_topic_string( string str )
+{
+    string tstr("redeye/camera/");
+    tstr += ID + "/" + str;
+    return tstr;
+}
+
+static char* mqtt_topic_chars( string str )
+{
+    char *s = strdup( mqtt_topic_string( str ).c_str() );
+    return s;
 }
 
 static void mqtt_subscribe_callback(struct mosquitto *mosq, void *userdata, int mid, int qos_count, const int *granted_qos)
@@ -43,8 +58,11 @@ static void mqtt_connect_callback(struct mosquitto *mosq, void *userdata, int re
         return;
     }
     /* Subscribe to broker information topics on successful connect. */
-    string t = "redeye/camera/" + ID;
-    mosquitto_subscribe(mosq, NULL, t.c_str(), 2);
+    string tbase = "redeye/camera/" + ID;
+
+    mosquitto_subscribe(mosq, NULL, mqtt_topic_chars( "cmd" ), 2);
+    mosquitto_subscribe(mosq, NULL, mqtt_topic_chars( "filter" ), 2);
+    
     mqtt_publish("redeye/announce/camera", ID.c_str());
 }
 
@@ -53,20 +71,22 @@ static void mqtt_message_callback(struct mosquitto *mosq, void *obj, const struc
     bool match = 0;
     printf("MQTT Message topic: %s - %d - %s\n", msg->topic, msg->payloadlen, (char *) msg->payload);
 
-    if ( msg->topic == mqtt_id_topic() ) {
+    if ( msg->topic == mqtt_topic_string( "cmd" ) ) {
         cout << "MQTT CMD sent to us: " << (char *) msg->payload << endl;
 
         cmd_runner( (char *) msg->payload );
 
-        return;
+    } else if ( msg->topic == mqtt_topic_string( "filter" )) {
+
+        player->set_filter( (char*) msg->payload );
+        
+    } else {
+
+        cerr << "ERROR MQTT Message Callback - unknown topic " << msg->topic << endl;
+
     }
 }
 
-int mqtt_publish(string topic, string msg)
-{
-    int mid;
-    return mosquitto_publish( g_mosq, NULL, topic.c_str(), msg.length(), msg.c_str(), 0, false );
-}
 
 void* mqtt_loop(void *p)
 {

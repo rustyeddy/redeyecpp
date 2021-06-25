@@ -21,7 +21,6 @@ private:
     Imgsrc*             _imgsrc;
 
     list<string>        _cmdlist;
-
     VideoWriter*        _video_writer;
 
     bool                _recording = false;
@@ -29,9 +28,8 @@ private:
 public:
     Player( string name );
 
-    void        add_imgsrc(Imgsrc *i) { _imgsrc = i; }
-    void        add_filter(Filter* f) { _filter = f; }
-    Filter*     get_filter(string name);
+    void        add_imgsrc( Imgsrc* i ) { _imgsrc = i; }
+    void        set_filter( string name );
 
     string      snapshot_filename()  { return "redeye-snapshot.png"; }
     string      video_filename()        { return "redeye-video.mp4"; }

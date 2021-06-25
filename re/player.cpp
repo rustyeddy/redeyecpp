@@ -10,6 +10,16 @@
 using namespace cv;
 using namespace std;
 
+static FltFilters* filters = NULL;
+static FltFilters* get_filters()
+{
+    if ( filters == NULL ) {
+        filters = new FltFilters();
+    }
+    return filters;
+}
+
+
 extern Mat iframe;          // XXX declare properly
 extern Mat nframe;
 
@@ -123,6 +133,21 @@ int Player::save_image( Mat& img )
 
     int result = imwrite("redeye-image.png", img, compression_params);
     return result;
+}
+
+void Player::set_filter( string name )
+{
+    if ( _filter == NULL || name != _filter->Name() ) {
+        filters = get_filters();
+        assert( filters );
+
+        cout << "Setting filter to " << name << endl;
+        _filter = filters->get(name);
+
+        if ( _filter == NULL ) {
+            cerr << "filter fialed probably not known: " << name << endl;
+        }
+    }
 }
 
 void Player::display(Mat& img, Filter *filter)

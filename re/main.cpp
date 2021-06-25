@@ -10,8 +10,8 @@
 #include "video.hpp"
 #include "filters/filter.hpp"
 
-Config *config;
-Player *player;
+Config*         config;
+Player*         player;
 
 string ID = "";
 
@@ -29,8 +29,8 @@ int main(int argc, char* argv[], char *envp[] )
     
     pthread_create(&t_mqtt, NULL, mqtt_loop, (char *)ID.c_str());
 
-    player  = new Player( config->get_name() );
-    player->add_filter( config->get_filter() );
+    player  = new Player( config->get_filter_name() );
+    player->set_filter( config->get_filter_name() );
     player->add_imgsrc( config->get_video() );
 
     cv::startWindowThread();

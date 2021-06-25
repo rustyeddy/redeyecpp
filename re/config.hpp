@@ -19,15 +19,11 @@ private:
     string _gstreamer           = "";
     string _mqtt_broker         = "";
 
-    FltFilters* _filters        = NULL;
-    Filter*     _filter         = NULL;
-
 public:
     Config( int argc, char *argv[], char *envp[] );
     int parse_args( int argc, char *argv[], char *envp[] );
 
-    string      get_name() { return _filter_name; }
-    Filter*     get_filter();
+    string      get_filter_name() { return _filter_name; }
     Video*      get_video();
     Image*      get_image();
 

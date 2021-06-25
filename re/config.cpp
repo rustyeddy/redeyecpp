@@ -63,21 +63,3 @@ Image*  Config::get_image()
     return img;
 }
 
-Filter* Config::get_filter()
-{
-    if ( _filter ) {
-        return _filter;
-    }
-
-    if ( _filter_name == "" ) {
-        return NULL;
-    }
-
-    _filters = new FltFilters();
-    if ( _filters == NULL ) {
-        return NULL;
-    }
-    
-    _filter = _filters->get( _filter_name );
-    return _filter;
-}
