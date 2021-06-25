@@ -1,3 +1,3 @@
 #pragma once
 
-extern string get_ip_address(std::string);
+extern std::string get_ip_address(std::string);

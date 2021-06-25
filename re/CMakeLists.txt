@@ -15,6 +15,7 @@ add_executable( re
                 net.cpp
                 player.cpp
                 video.cpp
+                web.cpp
                 )       
 
 set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -ggdb -ffunction-sections")

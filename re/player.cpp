@@ -60,37 +60,12 @@ void Player::stop()
     }
 }
 
-void Player::play( )
+void Player::check_commands( )
 {
-    // TODO - Add message channel allowing external people or programs
-    // can communicate with our player
-    bool running = true;
-    while ( running ) {
-
-        // XXX - Lock iframe it is global 
-        iframe = _imgsrc->get_frame();
-        if ( iframe.empty() ) {
-            cout << "Iframe empty - stopping video..." << endl;
-            break;
-        }
-
-        // empty the frames, but do not display them nor save them.
-        if ( ! _paused ) {
-            display( iframe, _filter );            
-        }
-
-        // if we are recording, write the frame to the video writer
-        if ( _recording ) {
-            assert( _video_writer );
-            *_video_writer << iframe;            
-        } else if ( _video_writer != NULL ) {
-            delete _video_writer;
-            _video_writer = NULL;
-        }
-
+    
         // Check for incoming commands
         if ( _cmdlist.empty() ) {
-            continue;
+            return;
         }
 
         // If there are incoming commands, handle them here
@@ -126,6 +101,35 @@ void Player::play( )
 
             cerr << "We have no support for: " << cmd << endl;
         }
+}
+void Player::play( )
+{
+    // TODO - Add message channel allowing external people or programs
+    // can communicate with our player
+    bool running = true;
+    while ( running ) {
+
+        // XXX - Lock iframe it is global 
+        iframe = _imgsrc->get_frame();
+        if ( iframe.empty() ) {
+            cout << "Iframe empty - stopping video..." << endl;
+            break;
+        }
+
+        // empty the frames, but do not display them nor save them.
+        if ( ! _paused ) {
+            display( iframe, _filter );            
+        }
+
+        // if we are recording, write the frame to the video writer
+        if ( _recording ) {
+            assert( _video_writer );
+            *_video_writer << iframe;            
+        } else if ( _video_writer != NULL ) {
+            delete _video_writer;
+            _video_writer = NULL;
+        }
+
     }
 }
 

@@ -24,7 +24,7 @@ int Config::parse_args( int argc, char *argv[], char *envp[] )
             break;
 
         case 'i':
-            _file_name = optarg;
+            _iface = optarg;
             break;
 
 	case 't':

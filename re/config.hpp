@@ -18,6 +18,7 @@ private:
     string _file_name           = "";
     string _gstreamer           = "";
     string _mqtt_broker         = "";
+    string _iface               = "eth0";
 
 public:
     Config( int argc, char *argv[], char *envp[] );

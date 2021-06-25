@@ -8,6 +8,8 @@
 #include "net.hpp"
 #include "player.hpp"
 #include "video.hpp"
+#include "web.hpp"
+
 #include "filters/filter.hpp"
 
 Config*         config;
@@ -26,8 +28,10 @@ int main(int argc, char* argv[], char *envp[] )
 
     pthread_t t_mqtt;
     pthread_t t_player;
+    pthread_t t_web;
     
     pthread_create(&t_mqtt, NULL, mqtt_loop, (char *)ID.c_str());
+    pthread_create(&t_web,  NULL, web_start, NULL);
 
     player  = new Player( config->get_filter_name() );
     player->set_filter( config->get_filter_name() );
@@ -41,6 +45,7 @@ int main(int argc, char* argv[], char *envp[] )
 
     cv::destroyAllWindows();
     
+    pthread_join(t_web, NULL);
     pthread_join(t_mqtt, NULL);
     pthread_join(t_player, NULL); 
 

@@ -45,6 +45,7 @@ public:
     void        display( Mat& frame, Filter *filter = NULL );
 
     void        command_request(string s);
+    void	check_commands();
 
     int         save_image( Mat& frame );
 
