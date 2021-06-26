@@ -3,6 +3,7 @@
 #include <opencv2/opencv.hpp>
 #include "externs.hpp"
 #include "filters/filter.hpp"
+#include "mjpg.hpp"
 #include "mqtt.hpp"
 #include "player.hpp"
 
@@ -19,7 +20,7 @@ static FltFilters* get_filters()
     return filters;
 }
 
-
+extern void mjpeg_iframe_q(cv::Mat& iframe);
 extern Mat iframe;          // XXX declare properly
 extern Mat nframe;
 
@@ -102,6 +103,7 @@ void Player::check_commands( )
             cerr << "We have no support for: " << cmd << endl;
         }
 }
+
 void Player::play( )
 {
     // TODO - Add message channel allowing external people or programs
@@ -120,6 +122,8 @@ void Player::play( )
         if ( ! _paused ) {
             display( iframe, _filter );            
         }
+
+        mjpeg_iframe_q(iframe); 
 
         // if we are recording, write the frame to the video writer
         if ( _recording ) {
