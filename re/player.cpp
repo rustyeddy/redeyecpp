@@ -127,6 +127,13 @@ void Player::play( )
             continue;
         }
 
+        // TODO create an outgoing frame Q. The other end of the Q
+        // will spin looking for frames on Q and depending on
+        // configuration the frame(s) will be sent through the
+        // filter(s), display, MJPeg streaming and file storage
+        //
+        // Interesting to see if there is any performance gain.
+
         // empty the frames, but do not display them nor save them.
         if ( ! _paused ) {
             display( iframe, _filter );            
