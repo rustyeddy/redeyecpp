@@ -5,7 +5,6 @@
 
 #include "config.hpp"
 #include "mqtt.hpp"
-#include "mjpg.hpp"
 #include "net.hpp"
 #include "player.hpp"
 #include "video.hpp"
@@ -30,25 +29,18 @@ int main(int argc, char* argv[], char *envp[] )
     pthread_t t_mqtt;
     pthread_t t_player;
     pthread_t t_web;
-    pthread_t t_mjpg;
     
     pthread_create(&t_mqtt, NULL, mqtt_loop, (char *)ID.c_str());
     pthread_create(&t_web,  NULL, web_start, NULL);
-    pthread_create(&t_mjpg, NULL, mjpg_server, NULL );
 
     player  = new Player( config->get_filter_name() );
     player->set_filter( config->get_filter_name() );
     player->add_imgsrc( config->get_video() );
 
     cv::startWindowThread();
-
-    // player will create an event loop for commands and handle
-    // player messaging 
     pthread_create(&t_player, NULL, &play_video, player);
-
     cv::destroyAllWindows();
     
-    pthread_join(t_mjpg, NULL);
     pthread_join(t_web, NULL);
     pthread_join(t_mqtt, NULL);
     pthread_join(t_player, NULL); 

@@ -1,12 +1,16 @@
 #include <list>
 #include <vector>
 #include <opencv2/opencv.hpp>
+
+#include "../vendors/cpp-mjpeg-streamer/single_include/nadjieb/mjpeg_streamer.hpp"
+
+#include "config.hpp"
 #include "externs.hpp"
 #include "filters/filter.hpp"
-#include "mjpg.hpp"
 #include "mqtt.hpp"
 #include "player.hpp"
 
+using MJPEGStreamer = nadjieb::MJPEGStreamer;
 
 using namespace cv;
 using namespace std;
@@ -64,48 +68,52 @@ void Player::stop()
 void Player::check_commands( )
 {
     
-        // Check for incoming commands
-        if ( _cmdlist.empty() ) {
-            return;
-        }
+    // Check for incoming commands
+    if ( _cmdlist.empty() ) {
+        return;
+    }
 
-        // If there are incoming commands, handle them here
-        string cmd = _cmdlist.back();
-        _cmdlist.pop_back();
+    // If there are incoming commands, handle them here
+    string cmd = _cmdlist.back();
+    _cmdlist.pop_back();
 
-        if ( cmd == "snap" ) {
+    if ( cmd == "snap" ) {
 
-            // Save image to file.
-            cout << "We have an iframe to save to file ... " << endl;
-            save_image( iframe );
+        // Save image to file.
+        cout << "We have an iframe to save to file ... " << endl;
+        save_image( iframe );
 
-        } else if ( cmd == "pause" ) {
+    } else if ( cmd == "pause" ) {
 
-            cout << "We are being paused ... " << endl;
-            _paused = true;
+        cout << "We are being paused ... " << endl;
+        _paused = true;
 
-        } else if ( cmd == "play" ) {
+    } else if ( cmd == "play" ) {
 
-            cout << "Play has been pushed ... " << endl;
-            _paused = false;
+        cout << "Play has been pushed ... " << endl;
+        _paused = false;
 
-        } else if ( cmd == "record" ) {
+    } else if ( cmd == "record" ) {
 
-            cout << "We have a frame from video to save ... " << endl;
-            record();
+        cout << "We have a frame from video to save ... " << endl;
+        record();
 
-        } else if ( cmd == "stop" ) {
-            cout << "We have recieved a stop command " << endl;
-            stop();
+    } else if ( cmd == "stop" ) {
+        cout << "We have recieved a stop command " << endl;
+        stop();
 
-        } else {
+    } else {
 
-            cerr << "We have no support for: " << cmd << endl;
-        }
+        cerr << "We have no support for: " << cmd << endl;
+    }
 }
 
 void Player::play( )
 {
+    std::vector<int> params = { cv::IMWRITE_JPEG_QUALITY, 90 };
+    MJPEGStreamer streamer;
+    streamer.start( config->get_mjpg_port() );
+
     // TODO - Add message channel allowing external people or programs
     // can communicate with our player
     bool running = true;
@@ -115,7 +123,8 @@ void Player::play( )
         iframe = _imgsrc->get_frame();
         if ( iframe.empty() ) {
             cout << "Iframe empty - stopping video..." << endl;
-            break;
+            running = false;
+            continue;
         }
 
         // empty the frames, but do not display them nor save them.
@@ -123,7 +132,11 @@ void Player::play( )
             display( iframe, _filter );            
         }
 
-        mjpeg_iframe_q(iframe); 
+        std::vector<uchar> buff_bgr;
+        cv::imencode(".jpg", iframe, buff_bgr, params);
+        streamer.publish("/video0", std::string(buff_bgr.begin(), buff_bgr.end()));
+
+        continue;
 
         // if we are recording, write the frame to the video writer
         if ( _recording ) {
@@ -133,8 +146,9 @@ void Player::play( )
             delete _video_writer;
             _video_writer = NULL;
         }
-
     }
+
+    cerr << "Video has stopped playing.. " << endl;
 }
 
 VideoWriter* Player::get_video_writer()

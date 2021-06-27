@@ -17,7 +17,7 @@ private:
     string      _gstreamer      = "";
     string      _iface          = "eth0";
     string      _mqtt_broker    = "";
-    int         _mjpg_port      = 8765;
+    int         _mjpg_port      = 1234;
     string      _video_name     = "";
 
 public:

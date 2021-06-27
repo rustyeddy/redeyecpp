@@ -1,7 +1,6 @@
 #include <string>
 #include <opencv2/opencv.hpp>
 #include "web.hpp"
-#include "mjpg.hpp"
 
 #include "../vendors/cpp-httplib/httplib.h"
 #include "../vendors/cpp-mjpeg-streamer/single_include/nadjieb/mjpeg_streamer.hpp"
