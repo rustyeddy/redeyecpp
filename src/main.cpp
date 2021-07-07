@@ -19,6 +19,8 @@ string ID = "";
 
 using namespace std;
 
+void* hello_loop(void *);
+
 int main(int argc, char* argv[], char *envp[] )
 {
     config = new Config( argc, argv, envp );
@@ -29,9 +31,11 @@ int main(int argc, char* argv[], char *envp[] )
     pthread_t t_mqtt;
     pthread_t t_player;
     pthread_t t_web;
+    pthread_t t_hello;
     
     pthread_create(&t_mqtt, NULL, mqtt_loop, (char *)ID.c_str());
     pthread_create(&t_web,  NULL, web_start, NULL);
+    pthread_create(&t_hello, NULL, hello_loop, NULL);
 
     player  = new Player( config->get_filter_name() );
     player->set_filter( config->get_filter_name() );
@@ -44,7 +48,18 @@ int main(int argc, char* argv[], char *envp[] )
     pthread_join(t_web, NULL);
     pthread_join(t_mqtt, NULL);
     pthread_join(t_player, NULL); 
+    pthread_join(t_hello, NULL);
 
     cout << "Goodbye, all done. " << endl;
     exit(0);
+}
+
+void* hello_loop(void *)
+{
+    int running = true;
+    while (running) {
+        sleep(10);              // announce every 10 seconds
+        mqtt_publish("redeye/announce/camera", ID.c_str());
+    }
+    return NULL;
 }
