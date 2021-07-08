@@ -25,20 +25,10 @@ static FltFilters* get_filters()
 }
 
 extern void mjpeg_iframe_q(cv::Mat& iframe);
-extern Mat iframe;          // XXX declare properly
-extern Mat nframe;
 
 Player::Player(string name)
 {
     _name = name;
-    _windows.push_front(name);
-
-    cout << "Creating named window. " << endl;
-
-    namedWindow( name );
-    moveWindow( name, _xpos, _ypos );
-    _xpos += 100;
-    _ypos += 100;
 }
 
 void Player::command_request(string s)
@@ -81,7 +71,7 @@ void Player::check_commands( )
 
         // Save image to file.
         cout << "We have an iframe to save to file ... " << endl;
-        save_image( iframe );
+        //save_image( iframe );
 
     } else if ( cmd == "pause" ) {
 
@@ -120,7 +110,7 @@ void Player::play( )
     while ( running ) {
 
         // XXX - Lock iframe it is global 
-        iframe = _imgsrc->get_frame();
+	cv::Mat& iframe = _imgsrc->get_frame();
         if ( iframe.empty() ) {
             cout << "Iframe empty - stopping video..." << endl;
             running = false;
@@ -145,6 +135,7 @@ void Player::play( )
 
         continue;
 
+#ifdef NTONOW
         // if we are recording, write the frame to the video writer
         if ( _recording ) {
             assert( _video_writer );
@@ -153,6 +144,7 @@ void Player::play( )
             delete _video_writer;
             _video_writer = NULL;
         }
+#endif // NOTNOW
     }
 
     cerr << "Video has stopped playing.. " << endl;

@@ -12,7 +12,7 @@ FltContour::FltContour() : Filter("contour")
 {
 }
 
-cv::Mat& FltContour::filter(cv::Mat& img)
+cv::Mat& FltContour::filter(cv::Mat& iframe)
 {
     static bool init = true;
     if (init) {
@@ -37,7 +37,7 @@ cv::Mat& FltContour::filter(cv::Mat& img)
     bin = cv::Scalar::all(0);
 
     cv::drawContours( bin, contours, -1, cv::Scalar::all(255));
-    return img;
+    return iframe;
 }
 
 void contour_trackbar_cb( int val, void *param )

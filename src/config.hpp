@@ -27,12 +27,13 @@ public:
     string      get_filter_name()       { return _filter_name; }
     string      get_video_name()        { return _video_name; }
 
-    Video*      get_video();
-    Image*      get_image();
-
     string      get_mqtt_broker();
     int         get_mjpg_port()         { return _mjpg_port; }
 
+    string	get_iface()		{ return _iface; }
+
+    Video*      get_video();
+    Image*      get_image();
 };
 
 extern Config *config;

@@ -11,6 +11,7 @@ class Video : public Imgsrc
 {
     string              _name;
     cv::VideoCapture    _cap;
+    cv::Mat		_iframe;
     
 public:
     Video( string camstr );

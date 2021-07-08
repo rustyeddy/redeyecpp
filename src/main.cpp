@@ -26,7 +26,7 @@ int main(int argc, char* argv[], char *envp[] )
     config = new Config( argc, argv, envp );
 
     // TODO: this will need to be fixed for other machines
-    ID = get_ip_address("eno1"); 
+    ID = get_ip_address(config->get_iface()); 
 
     pthread_t t_mqtt;
     pthread_t t_player;
@@ -57,9 +57,16 @@ int main(int argc, char* argv[], char *envp[] )
 void* hello_loop(void *)
 {
     int running = true;
+
+    string jstr = "{";
+    jstr += "\"addr\":\"" + ID + "\",";
+    jstr += "\"port\":" + to_string(config->get_mjpg_port()) + ",";
+    jstr += "\"name\":\"" + ID + "\",";
+    jstr += "\"uri\":\"/video0\"";
+    jstr += "}";
     while (running) {
         sleep(10);              // announce every 10 seconds
-        mqtt_publish("redeye/announce/camera", ID.c_str());
+        mqtt_publish("redeye/announce/camera", jstr.c_str());
     }
     return NULL;
 }

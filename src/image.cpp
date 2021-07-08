@@ -10,7 +10,6 @@ Image::Image(std::string fname)
 
 cv::Mat& Image::get_frame()
 {
-    //_iframe = cv::imread( _file_name, cv::IMREAD_COLOR );
-    _iframe = cv::imread( _file_name, cv::IMREAD_GRAYSCALE );
+    _iframe = cv::imread( _file_name, cv::IMREAD_COLOR );
     return _iframe;
 }
