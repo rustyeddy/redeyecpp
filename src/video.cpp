@@ -61,40 +61,19 @@ Video::Video( string camstr )
         cerr << "ERROR - the camera is not open. exiting ... " << endl;
         exit(-3);
     }
-
-    std::vector<int> params = { cv::IMWRITE_JPEG_QUALITY, 90 };
-    MJPEGStreamer streamer;
-    streamer.start( config->get_mjpg_port() );
-
-    cout << "Start collecting frames" << endl;
-    bool running = true;
-    while (running) {
-	cv::Mat img;
-	if (!_cap.read(img)) {
-	    cerr << "ERROR - reading cap frame" << endl;
-	    running = false;
-	}
-	imshow( "img", img );
-	std::vector<uchar> buff_bgr;
-        cv::imencode(".jpg", img, buff_bgr, params);
-        streamer.publish("/video0", std::string(buff_bgr.begin(), buff_bgr.end()));
-    }
 }
 
 cv::Mat& Video::get_frame()
 {
-    cout << "New GET FRAME a new iframe " << endl;
     if ( !_cap.isOpened() ) {
         cerr << "ERROR - the camera is not open. exiting ... " << endl;
         exit(-3);
     }
 
-    cout << "Read a new iframe " << endl;
     if (!_cap.read(_iframe)) {
 	cerr << "ERROR - reading cap frame" << endl;
 	return _iframe;
     }
-    cout << "Return from iframe " << endl;
     return _iframe;
 }
 

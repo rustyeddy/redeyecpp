@@ -15,7 +15,6 @@ using MJPEGStreamer = nadjieb::MJPEGStreamer;
 using namespace cv;
 using namespace std;
 
-static FltFilters* filters = NULL;
 static FltFilters* get_filters()
 {
     if ( filters == NULL ) {

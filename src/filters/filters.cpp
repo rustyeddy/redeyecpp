@@ -32,3 +32,22 @@ Filter* FltFilters::get(string name)
     }
     return NULL;
 }
+
+string FltFilters::to_json()
+{
+    string jstr = "{[";
+    bool first = false;
+
+    std::map<std::string, Filter*>::iterator it = _filters.begin();
+    while ( it != _filters.end() ) {
+        if (!first) {
+            jstr += ",";
+        } else {
+            first = false;
+        }
+        jstr += "\"" + it->first + "\"";
+        it++;
+    }
+    jstr += "]}";
+    return jstr;
+}

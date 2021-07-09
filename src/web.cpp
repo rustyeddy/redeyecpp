@@ -1,6 +1,8 @@
 #include <string>
 #include <opencv2/opencv.hpp>
+#include "filters/filters.hpp"
 #include "web.hpp"
+
 
 #include "../vendors/cpp-httplib/httplib.h"
 #include "../vendors/cpp-mjpeg-streamer/single_include/nadjieb/mjpeg_streamer.hpp"
@@ -29,10 +31,18 @@ void get_health_cb(const httplib::Request &, httplib::Response &res)
     res.set_content("{ \"health\": \"ok\" }", "text/plain");
 }
 
+void get_filters_cb(const httplib::Request &, httplib::Response &res)
+{
+    string str = filters->to_json();
+    res.set_content(str, "text/pain");
+}
+
+
 void *web_start(void *p)
 {
     svr.Get("/api/health",      get_health_cb);
     svr.Get("/api/cameras",     get_cameras_cb);
+    svr.Get("/api/filters",     get_filters_cb);
     svr.listen("0.0.0.0", 8765);
     return NULL;
 }

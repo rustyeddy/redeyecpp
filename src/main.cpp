@@ -12,10 +12,11 @@
 
 #include "filters/filter.hpp"
 
-Config*         config;
-Player*         player;
+Config*         config  = NULL;
+Player*         player  = NULL;
+FltFilters*     filters = NULL;
 
-string ID = "";
+string ID       = "";
 
 using namespace std;
 
@@ -27,7 +28,7 @@ int main(int argc, char* argv[], char *envp[] )
 
     // TODO: this will need to be fixed for other machines
     ID = get_ip_address(config->get_iface()); 
-
+    filters = new FltFilters();
     pthread_t t_mqtt;
     pthread_t t_player;
     pthread_t t_web;
