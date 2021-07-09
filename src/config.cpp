@@ -37,7 +37,7 @@ int Config::parse_args( int argc, char *argv[], char *envp[] )
 
         default:
             cerr << "ERROR unknown option: " << to_string(opt) << endl;
-            cerr << "Usage: re [-t | -v <videodev> | -i image] [-f <filter-name>]" << endl;
+            cerr << "Usage: re [ -t | -v <videodev> | -i interface ] [-f <filter-name>]" << endl;
             exit(1);
             break;
         }
