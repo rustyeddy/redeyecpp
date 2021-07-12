@@ -63,7 +63,7 @@ void* hello_loop(void *)
     jstr += "\"addr\":\"" + ID + "\",";
     jstr += "\"port\":" + to_string(config->get_mjpg_port()) + ",";
     jstr += "\"name\":\"" + ID + "\",";
-    jstr += "\"uri\":\"/video0\"";
+    jstr += "\"uri\": \"" + config->get_video_uri() + "\"";
     jstr += "}";
     while (running) {
         sleep(10);              // announce every 10 seconds
