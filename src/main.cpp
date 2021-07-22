@@ -65,6 +65,7 @@ void* hello_loop(void *)
     jstr += "\"name\":\"" + ID + "\",";
     jstr += "\"uri\": \"" + config->get_video_uri() + "\"";
     jstr += "}";
+
     while (running) {
         sleep(10);              // announce every 10 seconds
         mqtt_publish("redeye/announce/camera", jstr.c_str());
