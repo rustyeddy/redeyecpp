@@ -1,7 +1,9 @@
 #pragma once
 
 #include <string>
-#include <map>
+#include <queue>
+
+#include "../vendors/cpp-mjpeg-streamer/single_include/nadjieb/mjpeg_streamer.hpp"
 
 #include <opencv2/opencv.hpp>
 #include "filters/filter.hpp"
@@ -9,6 +11,7 @@
 
 using namespace std;
 using namespace cv;
+using MJPEGStreamer = nadjieb::MJPEGStreamer;
 
 class Player
 {
@@ -23,8 +26,13 @@ private:
     list<string>        _cmdlist;
     VideoWriter*        _video_writer;
 
+    MJPEGStreamer       _streamer;
+
+    bool                _streaming = false;
     bool                _recording = false;
     bool                _paused = false;
+
+    queue<cv::Mat>      _frameQ;
 
 public:
     Player( string name );
@@ -42,12 +50,15 @@ public:
 
     void        record();
     void        stop();
-    void        display( Mat& frame, Filter *filter = NULL );
 
+    void        stream( Mat& frame );
+    void        display( Mat& frame );
+    int         save_image( Mat& frame );
+
+    void        play_loop();
     void        command_request(string s);
     void	check_commands();
 
-    int         save_image( Mat& frame );
 
     string      to_string() { return _name; }
 };

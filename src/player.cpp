@@ -97,55 +97,81 @@ void Player::check_commands( )
     }
 }
 
-void Player::play( )
+void Player::stream( cv::Mat& mat )
 {
     std::vector<int> params = { cv::IMWRITE_JPEG_QUALITY, 90 };
-    MJPEGStreamer streamer;
-    streamer.start( config->get_mjpg_port() );
+    std::vector<uchar> buff_bgr;
+    cv::imencode(".jpg", mat, buff_bgr, params);
+    _streamer.publish("/video0", std::string(buff_bgr.begin(), buff_bgr.end()));
+}
 
-    // TODO - Add message channel allowing external people or programs
-    // can communicate with our player
-    bool running = true;
-    while ( running ) {
+void Player::play_loop()
+{
+    while ( _recording ) {
+        if ( _frameQ.empty() ) {
+            usleep(100);
+            continue;
+        }
+
+        cv::Mat& mat = _frameQ.front();
+        _frameQ.pop();
+
+        // move this up
+        if ( _filter ) {
+            mat = _filter->filter( mat );
+        }
+        
+        if ( ! _paused ) {
+            display( mat );
+        }
+        if ( _streaming ) {
+            stream ( mat );
+        }
+
+        if ( _recording && _video_writer ) {
+            // _video_writer << &mat;
+        }
+    }
+}
+
+void *play_loop( void *p )
+{
+    Player *player = (Player *)p;
+
+    cout << "PLay loop ! " << endl;
+    player->play_loop();
+    cout << "PLay loop returning " << endl;
+    return NULL;
+}
+
+void Player::play( )
+{
+    _recording = true;
+    
+    // Start the streamer 
+    _streamer.start( config->get_mjpg_port() );
+
+    pthread_t t_playloop;
+    pthread_create( &t_playloop, NULL, ::play_loop, this );
+    while ( _recording ) {
 
         // XXX - Lock iframe it is global 
 	cv::Mat& iframe = _imgsrc->get_frame();
         if ( iframe.empty() ) {
             cout << "Iframe empty - stopping video..." << endl;
-            running = false;
+            _recording = false;
             continue;
         }
 
-        // TODO create an outgoing frame Q. The other end of the Q
-        // will spin looking for frames on Q and depending on
-        // configuration the frame(s) will be sent through the
-        // filter(s), display, MJPeg streaming and file storage
-        //
-        // Interesting to see if there is any performance gain.
-
-        // empty the frames, but do not display them nor save them.
-        if ( ! _paused ) {
-            display( iframe, _filter );            
+        _frameQ.push( iframe );
+        if ( _frameQ.size() > 4 ) {
+            cout << "Frame size has grown to " << _frameQ.size() << endl;
         }
-
-        std::vector<uchar> buff_bgr;
-        cv::imencode(".jpg", iframe, buff_bgr, params);
-        streamer.publish("/video0", std::string(buff_bgr.begin(), buff_bgr.end()));
-
-        continue;
-
-#ifdef NTONOW
-        // if we are recording, write the frame to the video writer
-        if ( _recording ) {
-            assert( _video_writer );
-            *_video_writer << iframe;            
-        } else if ( _video_writer != NULL ) {
-            delete _video_writer;
-            _video_writer = NULL;
-        }
-#endif // NOTNOW
     }
 
+    pthread_join( t_playloop, NULL );
+
+    _streamer.stop();
     cerr << "Video has stopped playing.. " << endl;
 }
 
@@ -163,6 +189,7 @@ VideoWriter* Player::get_video_writer()
 
 int Player::save_image( Mat& img )
 {
+    std::vector<int> params = { cv::IMWRITE_JPEG_QUALITY, 90 };
     vector<int> compression_params;
     compression_params.push_back(IMWRITE_PNG_COMPRESSION);
     compression_params.push_back(9);
@@ -186,11 +213,8 @@ void Player::set_filter( string name )
     }
 }
 
-void Player::display(Mat& img, Filter *filter)
+void Player::display( Mat& img )
 {
-    if (filter) {
-        img = filter->filter(img);
-    }
     imshow( _name, img );
 }
 
