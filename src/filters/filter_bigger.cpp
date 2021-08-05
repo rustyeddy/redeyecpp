@@ -7,7 +7,7 @@ FltBigger::FltBigger() : Filter("bigger")
 {
 }
 
-cv::Mat& FltBigger::filter(cv::Mat& img)
+cv::Mat* FltBigger::filter(cv::Mat* img)
 {
     static bool init = true;
     if (init) {
@@ -16,7 +16,7 @@ cv::Mat& FltBigger::filter(cv::Mat& img)
         init = false;
     }
 
-    cv::pyrUp(img, img);
+    cv::pyrUp(*img, *img);
     return img;
 }
 

@@ -20,5 +20,5 @@ public:
 
     // All derivative classes must implement the filter method to
     // simply transform an image into another one.
-    virtual Mat& filter(Mat& iframe) = 0;
+    virtual Mat* filter(Mat* iframe) = 0;
 };

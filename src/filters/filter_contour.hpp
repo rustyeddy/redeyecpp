@@ -4,7 +4,7 @@ class FltContour : public Filter
 {
 public:
     FltContour();
-    Mat& filter(Mat& iframe);
+    Mat* filter(Mat* iframe);
 
     int get_threshold() { return 100; }
 };

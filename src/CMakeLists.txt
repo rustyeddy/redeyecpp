@@ -7,6 +7,7 @@ add_subdirectory( filters )
 find_package( OpenCV REQUIRED )
 include_directories( ${OpenCV_INCLUDE_DIRS} )
 add_executable( re
+                buffers.cpp
                 config.cpp
                 cmd.cpp
                 image.cpp

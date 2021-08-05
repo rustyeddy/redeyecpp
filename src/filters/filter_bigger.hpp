@@ -12,7 +12,7 @@ private:
 public:
     FltBigger();
     
-    Mat& filter(Mat& iframe);
+    Mat* filter(Mat* iframe);
 };
 
 extern void bigger_mouse_callback( int event, int x, int y, int flags, void *param );

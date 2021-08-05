@@ -3,7 +3,6 @@
 #include "filter_face_detect.hpp"
 
 using namespace std;
-using namespace cv;
 
 FltHaarCascade::FltHaarCascade() : Filter("face-detect")
 {
@@ -22,21 +21,23 @@ FltHaarCascade::FltHaarCascade() : Filter("face-detect")
     _filter_ok = true;
 }
 
-Mat& FltHaarCascade::filter(cv::Mat& iframe)
+cv::Mat* FltHaarCascade::filter(cv::Mat* iframe)
 {
     if ( _filter_ok == false ) {
         cerr << "Filter not ready" << endl;
         return iframe;
     }
 
-    if ( iframe.empty() ) {
+    if ( iframe->empty() ) {
         cerr << "Haar Cascasde filter frame is empty" << endl;
         return iframe;
     }
-    return detectAndDraw( iframe );
+    
+    detectAndDraw( iframe );
+    return iframe;
 }
 
-Mat& FltHaarCascade::detectAndDraw( Mat img )
+cv::Mat* FltHaarCascade::detectAndDraw( cv::Mat* img )
 {
     double t = 0;
     vector<Rect> faces, faces2;
@@ -52,8 +53,8 @@ Mat& FltHaarCascade::detectAndDraw( Mat img )
         Scalar(255,0,255)
     };
 
-    Mat gray, smallImg;
-    cvtColor( img, gray, COLOR_BGR2GRAY );
+    cv::Mat gray, smallImg;
+    cvtColor( *img, gray, COLOR_BGR2GRAY );
     double fx = 1 / _scale;
     resize( gray, smallImg, Size(), fx, fx, INTER_LINEAR_EXACT );
     equalizeHist( smallImg, smallImg );
@@ -74,7 +75,7 @@ Mat& FltHaarCascade::detectAndDraw( Mat img )
 
     for ( size_t i = 0; i < faces.size(); i++ ) {
         Rect r = faces[i];
-        Mat smallImgROI;
+        cv::Mat smallImgROI;
         vector<Rect> nestedObjects;
         Point center;
         Scalar color = colors[i%8];
@@ -85,9 +86,9 @@ Mat& FltHaarCascade::detectAndDraw( Mat img )
             center.x = cvRound( (r.x + r.width * 0.5) * _scale );
             center.y = cvRound( (r.y + r.height * 0.5) * _scale );            
             radius = cvRound( (r.width + r.height) * 0.25 * _scale );
-            circle( img, center, radius, color, 3, 8, 0 );
+            circle( *img, center, radius, color, 3, 8, 0 );
         } else {
-            rectangle( img,
+            rectangle( *img,
                        Point( cvRound( r.x * _scale ), cvRound( r.y * _scale ) ),
                        Point( cvRound(( r.x + r.width-1 ) * _scale ), cvRound(( r.y + r.height-1 ) * _scale) ),
                        color, 3, 8, 0 );
@@ -106,7 +107,7 @@ Mat& FltHaarCascade::detectAndDraw( Mat img )
             center.x = cvRound((r.x + nr.x + nr.width * 0.5) * _scale );
             center.y = cvRound((r.y + nr.y + nr.height * 0.5) * _scale );
             radius = cvRound( (nr.width + nr.height) * 0.25 * _scale );
-            circle( img, center, radius, color, 3, 8, 0 );
+            circle( *img, center, radius, color, 3, 8, 0 );
         }
     }
     return img;

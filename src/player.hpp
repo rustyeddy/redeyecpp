@@ -32,7 +32,11 @@ private:
     bool                _recording = false;
     bool                _paused = false;
 
-    queue<cv::Mat>      _frameQ;
+    queue<cv::Mat*>     _frameQ;
+
+    int                 _frameQ_max = 0;
+    int                 _frameQ_size = 0;
+    int                 _frameQ_dropped = 0;
 
 public:
     Player( string name );
@@ -51,15 +55,13 @@ public:
     void        record();
     void        stop();
 
-    void        stream( Mat& frame );
-    void        display( Mat& frame );
+    void        stream( Mat* frame );
+    void        display( Mat* frame );
     int         save_image( Mat& frame );
 
     void        play_loop();
     void        command_request(string s);
     void	check_commands();
-
-
     string      to_string() { return _name; }
 };
 

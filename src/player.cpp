@@ -97,40 +97,48 @@ void Player::check_commands( )
     }
 }
 
-void Player::stream( cv::Mat& mat )
+void Player::stream( cv::Mat* mat )
 {
     std::vector<int> params = { cv::IMWRITE_JPEG_QUALITY, 90 };
     std::vector<uchar> buff_bgr;
-    cv::imencode(".jpg", mat, buff_bgr, params);
+    cv::imencode(".jpg", *mat, buff_bgr, params);
     _streamer.publish("/video0", std::string(buff_bgr.begin(), buff_bgr.end()));
 }
 
 void Player::play_loop()
 {
     while ( _recording ) {
+
         if ( _frameQ.empty() ) {
             usleep(100);
             continue;
         }
-
-        cv::Mat& mat = _frameQ.front();
+        
+        cv::Mat* iframe = _frameQ.front();
         _frameQ.pop();
+
+	// cout << "Read new frame, new size: " << _frameQ.size() << endl;
 
         // move this up
         if ( _filter ) {
-            mat = _filter->filter( mat );
+            cout << "filtering " << endl;
+            _filter->filter( iframe );
         }
-        
+        stream ( iframe );
+
+#ifdef NOTNOW
         if ( ! _paused ) {
-            display( mat );
+            display( *iframe );
         }
         if ( _streaming ) {
-            stream ( mat );
+            stream ( *iframe );
         }
 
         if ( _recording && _video_writer ) {
             // _video_writer << &mat;
         }
+#endif 
+	delete iframe;
     }
 }
 
@@ -150,23 +158,29 @@ void Player::play( )
     
     // Start the streamer 
     _streamer.start( config->get_mjpg_port() );
+    _streaming = true;
 
     pthread_t t_playloop;
     pthread_create( &t_playloop, NULL, ::play_loop, this );
     while ( _recording ) {
 
-        // XXX - Lock iframe it is global 
-	cv::Mat& iframe = _imgsrc->get_frame();
-        if ( iframe.empty() ) {
+	cv::Mat* iframe = _imgsrc->get_frame();
+        if ( iframe == NULL || iframe->empty() ) {
             cout << "Iframe empty - stopping video..." << endl;
             _recording = false;
             continue;
         }
 
-        _frameQ.push( iframe );
-        if ( _frameQ.size() > 4 ) {
-            cout << "Frame size has grown to " << _frameQ.size() << endl;
+        int size = _frameQ.size();
+        if ( size > _frameQ_max ) {
+            _frameQ_max = size;
         }
+        if ( size > 4 ) {
+            _frameQ_dropped++;
+            delete iframe;
+            continue;
+        }
+        _frameQ.push( iframe );
     }
 
     pthread_join( t_playloop, NULL );
@@ -213,9 +227,9 @@ void Player::set_filter( string name )
     }
 }
 
-void Player::display( Mat& img )
+void Player::display( Mat* img )
 {
-    imshow( _name, img );
+    imshow( _name, *img );
 }
 
 void *play_video( void *p )

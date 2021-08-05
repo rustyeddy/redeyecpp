@@ -13,12 +13,12 @@ string Filter::Name() {
     return _name;
 }
 
-cv::Mat& Filter::filter(cv::Mat& iframe)
+cv::Mat* Filter::filter(cv::Mat* iframe)
 {
     return iframe;
 }
 
-// bool Filter::save_avi(string fname, cv::Mat& iframe)
+// bool Filter::save_avi(string fname, cv::Mat* iframe)
 // {
 //     cv::VideoWriter wr;
 //     //wr.open(fname, cv::FOURCC('M','J','P','G'), fps, size);

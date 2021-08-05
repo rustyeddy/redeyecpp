@@ -12,7 +12,7 @@ FltContour::FltContour() : Filter("contour")
 {
 }
 
-cv::Mat& FltContour::filter(cv::Mat& iframe)
+cv::Mat* FltContour::filter(cv::Mat* iframe)
 {
     static bool init = true;
     if (init) {
@@ -21,13 +21,13 @@ cv::Mat& FltContour::filter(cv::Mat& iframe)
         init = false;
     }
 
-    if (iframe.empty()) {
+    if (iframe->empty()) {
         cerr << "IFrame is empty, exiting..." << endl;
         exit(-5);
     }
     
     cv::Mat bin;
-    cv::threshold( iframe, bin, get_threshold(), 255, cv::THRESH_BINARY );
+    cv::threshold( *iframe, bin, get_threshold(), 255, cv::THRESH_BINARY );
 
     cv::imshow( "bin", bin );
 

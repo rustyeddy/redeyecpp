@@ -22,12 +22,12 @@ private:
     cv::CascadeClassifier _face_cascade;
     cv::CascadeClassifier _eyes_cascade;
 
-    cv::Mat& detectAndDraw( Mat iframe );
+    cv::Mat* detectAndDraw( cv::Mat *iframe );
 
 public:
     FltHaarCascade();
 
-    cv::Mat& filter(cv::Mat& iframe);
+    cv::Mat* filter(cv::Mat* iframe);
 };
 
 

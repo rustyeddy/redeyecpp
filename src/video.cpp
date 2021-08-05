@@ -63,17 +63,18 @@ Video::Video( string camstr )
     }
 }
 
-cv::Mat& Video::get_frame()
+cv::Mat* Video::get_frame()
 {
     if ( !_cap.isOpened() ) {
         cerr << "ERROR - the camera is not open. exiting ... " << endl;
         exit(-3);
     }
 
-    if (!_cap.read(_iframe)) {
+    Mat* iframe = new cv::Mat();
+    if (!_cap.read( *iframe )) {
 	cerr << "ERROR - reading cap frame" << endl;
-	return _iframe;
+	return iframe;
     }
-    return _iframe;
+    return iframe;
 }
 

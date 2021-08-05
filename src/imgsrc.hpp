@@ -5,5 +5,5 @@
 class Imgsrc
 {
 public:
-    virtual cv::Mat& get_frame() = 0;
+    virtual cv::Mat* get_frame() = 0;
 };
