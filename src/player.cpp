@@ -121,8 +121,7 @@ void Player::play_loop()
 
         // move this up
         if ( _filter ) {
-            cout << "filtering " << endl;
-            _filter->filter( iframe );
+            iframe = _filter->filter( iframe );
         }
         stream ( iframe );
 
