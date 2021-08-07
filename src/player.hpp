@@ -31,6 +31,7 @@ private:
     bool                _streaming = false;
     bool                _recording = false;
     bool                _paused = false;
+    bool                _local_display = false;
 
     queue<cv::Mat*>     _frameQ;
 

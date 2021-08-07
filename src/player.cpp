@@ -117,26 +117,18 @@ void Player::play_loop()
         cv::Mat* iframe = _frameQ.front();
         _frameQ.pop();
 
-	// cout << "Read new frame, new size: " << _frameQ.size() << endl;
-
         // move this up
         if ( _filter ) {
             iframe = _filter->filter( iframe );
         }
+
         stream ( iframe );
-
-#ifdef NOTNOW
-        if ( ! _paused ) {
-            display( *iframe );
+        if ( ! _paused && _local_display ) {
+            display( iframe );
         }
-        if ( _streaming ) {
-            stream ( *iframe );
-        }
-
         if ( _recording && _video_writer ) {
-            // _video_writer << &mat;
+            // _video_writer << &iframe;
         }
-#endif 
 	delete iframe;
     }
 }

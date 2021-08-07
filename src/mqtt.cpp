@@ -105,7 +105,8 @@ void* mqtt_loop(void *p)
     mosquitto_message_callback_set(g_mosq, mqtt_message_callback);
     mosquitto_subscribe_callback_set(g_mosq, mqtt_subscribe_callback);
 
-    if(mosquitto_connect(g_mosq, "10.24.10.10", 1883, keepalive)){
+    string broker = config->get_mqtt_broker();
+    if(mosquitto_connect(g_mosq, broker.c_str(), 1883, keepalive)){
         cerr << "MQTT Error: Failed to connect." << endl;
         return NULL;
     }

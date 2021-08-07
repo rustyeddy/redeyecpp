@@ -1,0 +1,1 @@
+../vendors/cpp-mjpeg-streamer/single_include/nadjieb/mjpeg_streamer.hpp

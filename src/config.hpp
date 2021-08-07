@@ -16,7 +16,7 @@ private:
     string      _file_name      = "";
     string      _gstreamer      = "";
     string      _iface          = "eth0";
-    string      _mqtt_broker    = "";
+    string      _mqtt_broker    = "10.11.10.10";
     int         _mjpg_port      = 1234;
     string      _video_name     = "";
     string      _video_uri      = "/video0";
@@ -28,7 +28,7 @@ public:
     string      get_filter_name()       { return _filter_name; }
     string      get_video_name()        { return _video_name; }
 
-    string      get_mqtt_broker();
+    string      get_mqtt_broker()       { return _mqtt_broker; }
     int         get_mjpg_port()         { return _mjpg_port; }
     string      get_video_uri()         { return _video_uri; } 
 

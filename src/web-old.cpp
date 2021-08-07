@@ -1,12 +1,7 @@
 #include <string>
-#include <string_view>
 #include <opencv2/opencv.hpp>
 
-// #include "../include/httplib.h"
-
-#include <uWebSockets/App.h>
-using string_view    = basic_string_view<char>;
-
+#include "../include/httplib.h"
 #include "../include/mjpeg_streamer.hpp"
 #include "../include/nlohmann/json.hpp"
 
@@ -18,25 +13,15 @@ using string_view    = basic_string_view<char>;
 
 using namespace std;
 
+//
+// This is here for https / ssl support
+//
+// #define CPPHTTPLIB_OPENSSL_SUPPORT
+// #include "path/to/httplib.h"
+// httplib::SSLServer svr;
+//
+const int MAX_CLIENTS = 5;
 using json = nlohmann::json;
-
-void *web_start( void * )
-{
-    /* HTTP */
-    uWS::App().get("/*", [&asyncFileStreamer](auto *res, auto *req) {
-        serveFile(res, req);
-        asyncFileStreamer.streamFile(res, req->getUrl());
-    }).listen(port, [port, root](auto *token) {
-        if (token) {
-            std::cout << "Serving " << root << " over HTTP a " << port << std::endl;
-        }
-    }).run();
-}
-
-
-
-
-#ifdef NOMAS
 
 // Normal old HTTP
 httplib::Server         svr;
@@ -77,4 +62,3 @@ void *web_start(void *p)
     svr.listen("0.0.0.0", 8765);
     return NULL;
 }
-#endif

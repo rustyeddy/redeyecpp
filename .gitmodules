@@ -1,3 +1,12 @@
 [submodule "vendors/cpp-httplib"]
 	path = vendors/cpp-httplib
 	url = git@github.com:yhirose/cpp-httplib.git
+[submodule "json"]
+	path = vendors/json
+	url = git@github.com:nlohmann/json
+[submodule "vendors/uSockets"]
+	path = vendors/uSockets
+	url = git@github.com:uNetworking/uSockets.git
+[submodule "vendors/uWebSockets"]
+	path = vendors/uWebSockets
+	url = git@github.com:uNetworking/uWebSockets.git

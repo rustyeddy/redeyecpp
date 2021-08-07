@@ -10,7 +10,7 @@
 #include <net/if.h>
 #include <arpa/inet.h>
  
-std::string get_ip_address(std::string ifname)
+std::string get_ip_address(std::string ifname = "eth0")
 {
     char ip_address[15];
     int fd;
