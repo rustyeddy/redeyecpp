@@ -33,9 +33,6 @@ void *web_start( void * )
     }).run();
 }
 
-
-
-
 #ifdef NOMAS
 
 // Normal old HTTP

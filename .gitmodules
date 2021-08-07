@@ -11,5 +11,5 @@
 	path = vendors/uWebSockets
 	url = git@github.com:uNetworking/uWebSockets.git
 [submodule "cpp-mjpeg-streamer"]
-	path = cpp-mjpeg-streamer
+	path = vendors/cpp-mjpeg-streamer
 	url = git@github.com:nadjieb/cpp-mjpeg-streamer.git
