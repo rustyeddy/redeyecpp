@@ -53,6 +53,7 @@ public:
     void        play();
     void        pause();
 
+    bool        is_recording()  { return _recording; }
     void        record();
     void        stop();
 
