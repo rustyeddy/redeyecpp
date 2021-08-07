@@ -28,20 +28,14 @@ Video::Video( string camstr )
     cout << "Opening camstr " << camstr << endl;
     _name = camstr;
 
-    if ( camstr == "tegra" ) {
-	int capture_width = 1280 ;
-	int capture_height = 720 ;
-	int display_width = 1280 ;
-	int display_height = 720 ;
-	int framerate = 60 ;
-	int flip_method = 0 ;
-
-	std::string pipeline = gstreamer_pipeline(capture_width,
-						  capture_height,
-						  display_width,
-						  display_height,
-						  framerate,
-						  flip_method);
+    if ( camstr == "tegra0" || camstr == "tegra1" ) {
+        
+	std::string pipeline = gstreamer_pipeline(dims.capture_width,
+						  dims.capture_height,
+						  dims.display_width,
+						  dims.display_height,
+						  dims.framerate,
+						  dims.flip_method);
 
 	std::cout << "Using pipeline: \n\t";
 	std::cout << "--------------------------------" << std::endl;
