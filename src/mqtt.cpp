@@ -12,7 +12,7 @@
 
 using namespace std;
 
-extern string ID;
+extern string IP;
 static struct mosquitto *g_mosq = NULL;
 
 int mqtt_publish(string topic, string msg)
@@ -24,7 +24,7 @@ int mqtt_publish(string topic, string msg)
 static string mqtt_topic_string( string str )
 {
     string tstr("redeye/camera/");
-    tstr += ID + "/" + str;
+    tstr += IP + "/" + str;
     return tstr;
 }
 
@@ -58,12 +58,12 @@ static void mqtt_connect_callback(struct mosquitto *mosq, void *userdata, int re
         return;
     }
     /* Subscribe to broker information topics on successful connect. */
-    string tbase = "redeye/camera/" + ID;
+    string tbase = "redeye/camera/" + IP;
 
     mosquitto_subscribe(mosq, NULL, mqtt_topic_chars( "cmd" ), 2);
     mosquitto_subscribe(mosq, NULL, mqtt_topic_chars( "filter" ), 2);
     
-    mqtt_publish("redeye/announce/camera", ID.c_str());
+    mqtt_publish("redeye/announce/camera", IP.c_str());
 }
 
 static void mqtt_message_callback(struct mosquitto *mosq, void *obj, const struct mosquitto_message *msg)

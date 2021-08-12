@@ -12,13 +12,14 @@ using namespace std;
 class Config
 {
 private:
+    string      _camera_name     = "";
     string      _filter_name    = "";
     string      _file_name      = "";
     string      _gstreamer      = "";
     string      _iface          = "eth0";
+    bool        _list_cameras   = false;
     string      _mqtt_broker    = "10.11.10.10";
     int         _mjpg_port      = 1234;
-    string      _video_name     = "";
     string      _video_uri      = "/video0";
     int         _web_port       = 80;
 
@@ -27,7 +28,7 @@ public:
     int parse_args( int argc, char *argv[], char *envp[] );
 
     string      get_filter_name()       { return _filter_name; }
-    string      get_video_name()        { return _video_name; }
+    string      get_camera_name()       { return _camera_name; }
 
     string      get_mqtt_broker()       { return _mqtt_broker; }
     int         get_mjpg_port()         { return _mjpg_port; }

@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <opencv2/opencv.hpp>
 
+#include "camera.hpp"
 #include "config.hpp"
 #include "mqtt.hpp"
 #include "net.hpp"
@@ -16,7 +17,7 @@ Config*         config  = NULL;
 Player*         player  = NULL;
 FltFilters*     filters = NULL;
 
-string ID       = "";
+string IP       = "";
 
 using namespace std;
 
@@ -27,7 +28,15 @@ int main(int argc, char* argv[], char *envp[] )
     config = new Config( argc, argv, envp );
 
     // TODO: this will need to be fixed for other machines
-    ID = get_ip_address(config->get_iface()); 
+    IP = get_ip_address(config->get_iface()); 
+    
+    Camera *cam = new Camera(config->get_camera_name());
+    assert(cam);
+
+    cout << cam->to_string() << endl;
+    cout << cam->to_json() << endl;    
+
+#ifdef NOTNOW
     filters = new FltFilters();
     pthread_t t_mqtt;
     pthread_t t_player;
@@ -45,11 +54,13 @@ int main(int argc, char* argv[], char *envp[] )
     cv::startWindowThread();
     pthread_create(&t_player, NULL, &play_video, player);
     cv::destroyAllWindows();
-    
+
+    pthread_join(t_player, NULL);     
+
     pthread_join(t_web, NULL);
     pthread_join(t_mqtt, NULL);
-    pthread_join(t_player, NULL); 
     pthread_join(t_hello, NULL);
+#endif // NOTNOW
 
     cout << "Goodbye, all done. " << endl;
     exit(0);
@@ -60,9 +71,9 @@ void* hello_loop(void *)
     int running = true;
 
     string jstr = "{";
-    jstr += "\"addr\":\"" + ID + "\",";
+    jstr += "\"addr\":\"" + IP + "\",";
     jstr += "\"port\":" + to_string(config->get_mjpg_port()) + ",";
-    jstr += "\"name\":\"" + ID + "\",";
+    jstr += "\"name\":\"" + IP + "\",";
     jstr += "\"uri\": \"" + config->get_video_uri() + "\"";
     jstr += "}";
 
