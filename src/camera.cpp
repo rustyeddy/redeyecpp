@@ -12,6 +12,13 @@ extern string IP;
 Camera::Camera(string id)
 {
     _id = id;
+    _name = id;
+    _init();
+}
+
+Camera::Camera(string id, string name)
+{
+    _id = id;
     _init();
 }
 
@@ -45,3 +52,22 @@ json Camera::to_json()
     j["url"]    = to_string();
     return j;
 }
+
+void Cameras::add(string name, Camera* cam)
+{
+    _camera_map[name] = cam;
+}
+
+json Cameras::to_json()
+{
+    json j;
+
+    for (std::map<string,Camera*>::iterator it = _camera_map.begin(); it != _camera_map.end(); ++it) {
+        Camera *cam = (Camera *) it->second;
+        cout << it->first << " => " << cam->to_string() << endl;
+    }
+    return j;
+}
+
+
+

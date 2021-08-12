@@ -32,6 +32,8 @@ private:
 
 public:
     Camera(string id);
+    Camera(string id, string name);
+
     string id()         { return _id; }
 
     void play();
@@ -43,3 +45,15 @@ public:
     string to_string();         // spits out the url
     json   to_json();           // spits out lots of stuff including url
 };
+
+class Cameras
+{
+private:
+    map<string,Camera*> _camera_map;
+
+public:
+    void add(string name, Camera* cam);
+    json to_json();
+};
+
+

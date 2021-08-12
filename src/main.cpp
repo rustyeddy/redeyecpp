@@ -17,6 +17,8 @@ Config*         config  = NULL;
 Player*         player  = NULL;
 FltFilters*     filters = NULL;
 
+Cameras         cameras;
+
 string IP       = "";
 
 using namespace std;
@@ -30,11 +32,17 @@ int main(int argc, char* argv[], char *envp[] )
     // TODO: this will need to be fixed for other machines
     IP = get_ip_address(config->get_iface()); 
     
-    Camera *cam = new Camera(config->get_camera_name());
-    assert(cam);
+    // Camera *cam = new Camera(config->get_camera_name());
+    // assert(cam);
+    cameras.add("video0", new Camera("/dev/video0", "video0"));
+    cameras.add("video1", new Camera("/dev/video1", "video1"));
+    cameras.add("csi0", new Camera("csi0"));
+    cameras.add("csi1", new Camera("csi1"));
 
-    cout << cam->to_string() << endl;
-    cout << cam->to_json() << endl;    
+    cout << cameras.to_json() << endl;
+
+    //cout << cameras->to_string() << endl;
+    //cout << cameras->to_json() << endl;    
 
 #ifdef NOTNOW
     filters = new FltFilters();
