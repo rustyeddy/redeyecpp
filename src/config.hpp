@@ -20,6 +20,7 @@ private:
     int         _mjpg_port      = 1234;
     string      _video_name     = "";
     string      _video_uri      = "/video0";
+    int         _web_port       = 80;
 
 public:
     Config( int argc, char *argv[], char *envp[] );
@@ -31,6 +32,7 @@ public:
     string      get_mqtt_broker()       { return _mqtt_broker; }
     int         get_mjpg_port()         { return _mjpg_port; }
     string      get_video_uri()         { return _video_uri; } 
+    int         get_web_port()          { return _web_port; }
 
     string	get_iface()		{ return _iface; }
 

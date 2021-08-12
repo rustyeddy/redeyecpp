@@ -6,6 +6,11 @@ images from the camera, optionally runs the video images through a
 _Computer Vision_ pipeline, the modified image is then made available
 via a built in Webserver.
 
+## Starting redeye
+
+Start Redeye on the Nano. Now start up the UI.
+
+
 ## Camera Features
 
 RedEye was designed as a _Service Oriented Architecture_ which is
