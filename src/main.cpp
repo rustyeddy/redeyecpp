@@ -68,9 +68,12 @@ int main(int argc, char* argv[], char *envp[] )
     pthread_create(&t_web,  NULL, web_start, NULL);
     pthread_create(&t_hello, NULL, hello_loop, NULL);
 
-#ifdef NOTNOW
     filters = new FltFilters();
 
+    // This program will wait for explicit instruction to start
+    // streams from one or more of our cameras.
+
+#ifdef NOTNOW
     pthread_t t_player;
 
     player  = new Player( config->get_filter_name() );
@@ -82,7 +85,6 @@ int main(int argc, char* argv[], char *envp[] )
     cv::destroyAllWindows();
 
     pthread_join(t_player, NULL);     
-
 #endif // NOTNOW
 
     pthread_join(t_hello, NULL);
