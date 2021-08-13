@@ -97,17 +97,15 @@ int main(int argc, char* argv[], char *envp[] )
 void* hello_loop(void *)
 {
     int running = true;
-
-    string jstr = "{";
-    jstr += "\"addr\":\"" + IP + "\",";
-    jstr += "\"port\":" + to_string(config->get_mjpg_port()) + ",";
-    jstr += "\"name\":\"" + IP + "\",";
-    jstr += "\"uri\": \"" + config->get_video_uri() + "\"";
-    jstr += "}";
+    json j;
 
     while (running) {
         sleep(10);              // announce every 10 seconds
-        mqtt_publish("redeye/announce/camera", jstr.c_str());
+        j = cameras.to_json();
+        auto ipaddr = IP.c_str();
+        string chan("redeye/annouce/camera");
+        chan += "/" + IP;
+        mqtt_publish(chan.c_str(), j.dump());
     }
     return NULL;
 }
