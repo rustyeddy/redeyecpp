@@ -39,10 +39,8 @@ void get_cameras_cb(const httplib::Request &, httplib::Response &res)
 
 void put_camera_play_cb(const httplib::Request &, httplib::Response &res)
 {
-    player->record();
-
+    // TODO Create an event to play camera
     json j;
-    j["recording"] = player->is_recording();
     res.set_content( j.dump(), "application/json" );
 }
 

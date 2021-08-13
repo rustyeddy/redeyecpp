@@ -26,6 +26,8 @@ private:
     string      _macaddr;
     string      _url;
 
+    string      _filter_name;
+
     CameraState _state  = CAMERA_NOT_CONNECTED;
 
     void        _init();        // initialize ipaddr/macaddr
@@ -37,13 +39,16 @@ public:
     string id()         { return _id; }
 
     void play();
-    void pause();               // stop streaming video
-    void snapshot();            // record frame subsequent to calling this function
-    void record();              // begin saving the video stream to filesystem
-    void stop();                // stop saving the video stream to filesystem
+    void pause();    // stop streaming video
+    void snapshot(); // record frame subsequent to calling this function
+    void record();   // begin saving the video stream to filesystem
+    void stop();     // stop saving the video stream to filesystem
 
-    string to_string();         // spits out the url
-    json   to_json();           // spits out lots of stuff including url
+    void set_filter( string fltname ) { _filter_name = fltname; }
+
+    string make_url();        // URL to access camera M-JPEG from
+    string to_string();       // spits out the url
+    json   to_json();         // spits out lots of stuff including url
 };
 
 class Cameras

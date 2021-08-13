@@ -28,16 +28,16 @@ void Camera::_init()
     _port       = config->get_mjpg_port();
 }
 
-string Camera::to_string()
+string Camera::make_url()
 {
     string p = ::to_string(_port);
     string id = _id;
-    if (_id == "/dev/video0") {
-        id = "video0";
-    } else if ( _id == "/dev/video1" ) {
-        id = "video1";
-    }
     return "http://" + _ipaddr + ":" + p + "/" + id;
+}
+
+string Camera::to_string()
+{
+    return make_url();
 }
 
 json Camera::to_json()
@@ -53,31 +53,12 @@ json Camera::to_json()
     return j;
 }
 
-void Cameras::add(string name, Camera* cam)
+void Camera::play()
 {
-    _camera_map[name] = cam;
+    cout << "Camera playing ... " << endl;
 }
 
-Camera* Cameras::get(string name)
+void Camera::pause()
 {
-    if ( _camera_map.find(name) == _camera_map.end() ) {
-        return NULL;
-    }
-    return _camera_map[name];
+    cout << "Camera paused ... " << endl;    
 }
-
-json Cameras::to_json()
-{
-    json j;
-
-    for (std::map<string,Camera*>::iterator it = _camera_map.begin();
-         it != _camera_map.end(); ++it) {
-        Camera *cam = (Camera *) it->second;
-        // j[it->first] = cam->to_json();
-        j += cam->to_json();
-    }
-    return j;
-}
-
-
-

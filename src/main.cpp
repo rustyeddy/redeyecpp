@@ -5,6 +5,7 @@
 
 #include "camera.hpp"
 #include "config.hpp"
+#include "event.hpp"
 #include "mqtt.hpp"
 #include "net.hpp"
 #include "player.hpp"
@@ -18,11 +19,13 @@ Player*         player  = NULL;
 FltFilters*     filters = NULL;
 
 Cameras         cameras;
+queue<Event*>   eventQ;
 
 string IP       = "";
 
 using namespace std;
 
+void  main_loop();
 void* hello_loop(void *);
 
 int main(int argc, char* argv[], char *envp[] )
@@ -60,6 +63,15 @@ int main(int argc, char* argv[], char *envp[] )
         cout << cam->to_json() << endl;    
     }
     
+    main_loop();
+
+  done:
+    cout << "Goodbye, all done. " << endl;
+    exit(0);
+}
+
+void main_loop()
+{
     pthread_t t_mqtt;
     pthread_t t_web;    
     pthread_t t_hello;
@@ -72,28 +84,69 @@ int main(int argc, char* argv[], char *envp[] )
 
     // This program will wait for explicit instruction to start
     // streams from one or more of our cameras.
+    
+    bool running = true;
+    while ( running ) {
+        Camera* cam = NULL;
 
-#ifdef NOTNOW
-    pthread_t t_player;
+        if ( eventQ.empty() ) {
+            usleep(100);
+            continue;
+        }
 
-    player  = new Player( config->get_filter_name() );
-    player->set_filter( config->get_filter_name() );
-    player->add_imgsrc( config->get_video() );
+        Event* e = eventQ.front();
+        eventQ.pop();
 
-    cv::startWindowThread();
-    pthread_create(&t_player, NULL, &play_video, player);
-    cv::destroyAllWindows();
+        switch (e->get_type()) {
 
-    pthread_join(t_player, NULL);     
-#endif // NOTNOW
+        case EVENT_CAMERA_PLAY:
+
+            cam = cameras.get( e->get_camera() );
+            if (cam == NULL) {
+                // error bad camera name
+                break;
+            }
+            cam->play();
+            break;
+
+        case EVENT_CAMERA_PAUSE:
+
+            cam = cameras.get(e->get_camera());
+            if (cam == NULL) {
+                // error bad camera name
+                break;
+            }
+            cam->pause();
+            break;
+            
+        case EVENT_FILTER:
+            cam = cameras.get(e->get_camera());
+            if (cam == NULL) {
+                // error bad camera name
+                break;
+            }
+            cam->set_filter(e->get_args());
+            break;
+
+        case EVENT_EXIT:
+
+            running = false;
+
+            break;
+
+        default:
+            // get mad and send an error
+
+            break;
+
+        }
+
+    }
 
     pthread_join(t_hello, NULL);
     pthread_join(t_web, NULL);
     pthread_join(t_mqtt, NULL);
 
-  done:
-    cout << "Goodbye, all done. " << endl;
-    exit(0);
 }
 
 void* hello_loop(void *)
