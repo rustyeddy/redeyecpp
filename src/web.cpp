@@ -7,6 +7,7 @@
 
 #include "filters/filters.hpp"
 
+#include "camera.hpp"
 #include "config.hpp"
 #include "player.hpp"
 #include "net.hpp"
@@ -32,7 +33,7 @@ void get_cameras_cb(const httplib::Request &, httplib::Response &res)
     // TODO - Fix this.
     json j;
 
-    j["cameras"] = get_ip_address(config->get_iface());
+    j = cameras.to_json();
     res.set_content( j.dump(), "application/json" );
 }
 
@@ -62,19 +63,14 @@ void *web_start(void *p)
 {
     svr.Get("/api/health",      get_health_cb);
     svr.Get("/api/filters",     get_filters_cb);
-    svr.Put("/api/camera/play", put_camera_play_cb);
+    svr.Get("/api/cameras",     get_cameras_cb);
 
+    // svr.Put("/api/camera/play", put_camera_play_cb);
+
+    // Set the Access-Control header to avoid CORS block on browser
     svr.Options(R"(\*)", [](const auto& req, auto& res) {
         res.set_header("Access-Control-Allow-Origin", "*");
-        //res.set_header("Allow", "GET, POST, HEAD, OPTIONS");
     });
-
-    // svr.Options("/video0", [](const auto& req, auto& res) {
-    //     res.set_header("Access-Control-Allow-Origin", "*");
-    //     res.set_header("Allow", "GET, POST, HEAD, OPTIONS");
-    //     res.set_header("Access-Control-Allow-Headers", "X-Requested-With, Content-Type, Accept, Origin, Authorization");
-    //     res.set_header("Access-Control-Allow-Methods", "OPTIONS, GET, POST, HEAD");
-    // });
 
     auto ret = svr.set_mount_point("/", "../www");
     if (!ret) {

@@ -32,28 +32,46 @@ int main(int argc, char* argv[], char *envp[] )
     // TODO: this will need to be fixed for other machines
     IP = get_ip_address(config->get_iface()); 
     
-    // Camera *cam = new Camera(config->get_camera_name());
-    // assert(cam);
     cameras.add("video0", new Camera("/dev/video0", "video0"));
     cameras.add("video1", new Camera("/dev/video1", "video1"));
     cameras.add("csi0", new Camera("csi0"));
     cameras.add("csi1", new Camera("csi1"));
 
-    cout << cameras.to_json() << endl;
+    string name = config->get_camera_name();
 
-    //cout << cameras->to_string() << endl;
-    //cout << cameras->to_json() << endl;    
+    if ( config->Debug ) {
+        cout << "Camera list" << endl;
+        cout << cameras.to_json() << endl;
+        cout << "Current Camera: " << name << endl;
+        cout << "Checkout camera " << name << endl;
+    }
+    
+    Camera *cam = NULL;
+    if ( config->get_camera_name() == "" ) {
+        goto done;
+    }
+
+    cam = cameras.get(config->get_camera_name());
+    assert(cam);
+
+    if ( config->Debug ) {
+        cout << "Camera config: " << config << endl;
+        cout << cam->to_string() << endl;
+        cout << cam->to_json() << endl;    
+    }
+    
+    pthread_t t_mqtt;
+    pthread_t t_web;    
+    pthread_t t_hello;
+
+    pthread_create(&t_mqtt, NULL, mqtt_loop, (char *)IP.c_str());
+    pthread_create(&t_web,  NULL, web_start, NULL);
+    pthread_create(&t_hello, NULL, hello_loop, NULL);
 
 #ifdef NOTNOW
     filters = new FltFilters();
-    pthread_t t_mqtt;
+
     pthread_t t_player;
-    pthread_t t_web;
-    pthread_t t_hello;
-    
-    pthread_create(&t_mqtt, NULL, mqtt_loop, (char *)ID.c_str());
-    pthread_create(&t_web,  NULL, web_start, NULL);
-    pthread_create(&t_hello, NULL, hello_loop, NULL);
 
     player  = new Player( config->get_filter_name() );
     player->set_filter( config->get_filter_name() );
@@ -65,11 +83,13 @@ int main(int argc, char* argv[], char *envp[] )
 
     pthread_join(t_player, NULL);     
 
-    pthread_join(t_web, NULL);
-    pthread_join(t_mqtt, NULL);
-    pthread_join(t_hello, NULL);
 #endif // NOTNOW
 
+    pthread_join(t_hello, NULL);
+    pthread_join(t_web, NULL);
+    pthread_join(t_mqtt, NULL);
+
+  done:
     cout << "Goodbye, all done. " << endl;
     exit(0);
 }

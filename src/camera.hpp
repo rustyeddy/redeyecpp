@@ -52,8 +52,10 @@ private:
     map<string,Camera*> _camera_map;
 
 public:
-    void add(string name, Camera* cam);
-    json to_json();
+    void        add(string name, Camera* cam);
+    Camera*     get(string name);
+    json        to_json();
 };
 
+extern Cameras cameras;
 

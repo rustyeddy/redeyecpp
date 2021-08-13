@@ -24,6 +24,8 @@ private:
     int         _web_port       = 80;
 
 public:
+    bool        Debug           = false;
+
     Config( int argc, char *argv[], char *envp[] );
     int parse_args( int argc, char *argv[], char *envp[] );
 

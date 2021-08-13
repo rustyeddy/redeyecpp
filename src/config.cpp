@@ -23,6 +23,9 @@ int Config::parse_args( int argc, char *argv[], char *envp[] )
             _camera_name = optarg;
             break;
 
+            Debug = true;
+            break;
+
         case 'f':
             _filter_name = optarg;
             break;

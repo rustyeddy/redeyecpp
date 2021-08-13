@@ -58,13 +58,23 @@ void Cameras::add(string name, Camera* cam)
     _camera_map[name] = cam;
 }
 
+Camera* Cameras::get(string name)
+{
+    if ( _camera_map.find(name) == _camera_map.end() ) {
+        return NULL;
+    }
+    return _camera_map[name];
+}
+
 json Cameras::to_json()
 {
     json j;
 
-    for (std::map<string,Camera*>::iterator it = _camera_map.begin(); it != _camera_map.end(); ++it) {
+    for (std::map<string,Camera*>::iterator it = _camera_map.begin();
+         it != _camera_map.end(); ++it) {
         Camera *cam = (Camera *) it->second;
-        cout << it->first << " => " << cam->to_string() << endl;
+        // j[it->first] = cam->to_json();
+        j += cam->to_json();
     }
     return j;
 }
