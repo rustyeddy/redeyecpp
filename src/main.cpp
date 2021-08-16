@@ -14,6 +14,8 @@
 
 #include "filters/filter.hpp"
 
+using namespace std;
+
 Config*         config  = NULL;
 Player*         player  = NULL;
 FltFilters*     filters = NULL;
@@ -22,8 +24,6 @@ Cameras         cameras;
 queue<Event*>   eventQ;
 
 string IP       = "";
-
-using namespace std;
 
 void  main_loop();
 void* hello_loop(void *);
@@ -35,8 +35,8 @@ int main(int argc, char* argv[], char *envp[] )
     // TODO: this will need to be fixed for other machines
     IP = get_ip_address(config->get_iface()); 
     
-    cameras.add("video0", new Camera("/dev/video0", "video0"));
-    cameras.add("video1", new Camera("/dev/video1", "video1"));
+    cameras.add("video0", new Camera("video0"));
+    cameras.add("video1", new Camera("video1"));
     cameras.add("csi0", new Camera("csi0"));
     cameras.add("csi1", new Camera("csi1"));
 
@@ -49,20 +49,10 @@ int main(int argc, char* argv[], char *envp[] )
         cout << "Checkout camera " << name << endl;
     }
     
-    Camera *cam = NULL;
-    if ( config->get_camera_name() == "" ) {
-        goto done;
+    if ( name != "" ) {
+        Event *e = new Event(EVENT_CAMERA_PLAY, name );
+        eventQ.push(e);
     }
-
-    cam = cameras.get(config->get_camera_name());
-    assert(cam);
-
-    if ( config->Debug ) {
-        cout << "Camera config: " << config << endl;
-        cout << cam->to_string() << endl;
-        cout << cam->to_json() << endl;    
-    }
-    
     main_loop();
 
   done:
@@ -88,6 +78,7 @@ void main_loop()
     bool running = true;
     while ( running ) {
         Camera* cam = NULL;
+        string camname = "";
 
         if ( eventQ.empty() ) {
             usleep(100);
@@ -101,12 +92,18 @@ void main_loop()
 
         case EVENT_CAMERA_PLAY:
 
-            cam = cameras.get( e->get_camera() );
+            camname = e->get_camera();
+            cam = cameras.get( camname );
             if (cam == NULL) {
-                // error bad camera name
+                cout << "Error opening " + camname << endl;
                 break;
             }
-            cam->play();
+
+            //cam->play();
+            // start a thread
+
+            player = new Player(cam);
+            player->play();
             break;
 
         case EVENT_CAMERA_PAUSE:

@@ -20,8 +20,7 @@ private:
     string      _arg;
 
 public:
-    Event( EVENT_TYPE t, string cam )       { _event_type = t; }
-    Event( EVENT_TYPE t, string cam, string param );
+    Event( EVENT_TYPE t, string cam )       { _event_type = t; _camera = cam; }
 
     EVENT_TYPE  get_type()      { return _event_type; }
     string      get_camera()    { return _camera; }

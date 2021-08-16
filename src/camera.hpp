@@ -3,9 +3,14 @@
 #include <map>
 #include <string>
 
-#include "../include/nlohmann/json.hpp"
-using json = nlohmann::json;
+#include <opencv2/opencv.hpp>
 
+#include "../include/nlohmann/json.hpp"
+
+#include "image.hpp"
+#include "imgsrc.hpp"
+
+using json = nlohmann::json;
 using namespace std;
 
 enum CameraState
@@ -16,7 +21,7 @@ enum CameraState
     CAMERA_ERROR                = 16,
 };
 
-class Camera
+class Camera : public Imgsrc
 {
 private:
     string      _id;
@@ -27,16 +32,23 @@ private:
     string      _url;
 
     string      _filter_name;
+    bool        _usb            = false;
 
-    CameraState _state  = CAMERA_NOT_CONNECTED;
+    cv::VideoCapture    _cap;
+    CameraState         _state  = CAMERA_NOT_CONNECTED;
 
     void        _init();        // initialize ipaddr/macaddr
 
-public:
+public:    
+    queue<cv::Mat*>     frameQ;
     Camera(string id);
     Camera(string id, string name);
 
     string id()         { return _id; }
+
+    cv::Mat*            get_frame();
+
+    bool is_opened()    { return _cap.isOpened(); }
 
     void play();
     void pause();    // stop streaming video

@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "cmd.hpp"
+#include "image.hpp"
 #include "player.hpp"
 
 using namespace std;

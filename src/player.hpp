@@ -6,6 +6,8 @@
 #include "../vendors/cpp-mjpeg-streamer/single_include/nadjieb/mjpeg_streamer.hpp"
 
 #include <opencv2/opencv.hpp>
+
+#include "camera.hpp"
 #include "filters/filter.hpp"
 #include "video.hpp"
 
@@ -16,13 +18,12 @@ using MJPEGStreamer = nadjieb::MJPEGStreamer;
 class Player
 {
 private:
-    string              _name = "";
+    Camera*             _cam;
+
     list<string>        _windows;
     int                 _xpos = 100, _ypos = 100;
 
     Filter*             _filter = NULL;
-    Imgsrc*             _imgsrc;
-
     list<string>        _cmdlist;
     VideoWriter*        _video_writer;
 
@@ -33,16 +34,15 @@ private:
     bool                _paused = false;
     bool                _local_display = false;
 
-    queue<cv::Mat*>     _frameQ;
+    queue<Mat*>         _frameQ;
 
     int                 _frameQ_max = 0;
     int                 _frameQ_size = 0;
     int                 _frameQ_dropped = 0;
 
 public:
-    Player( string name );
+    Player( Camera *cam );
 
-    void        add_imgsrc( Imgsrc* i ) { _imgsrc = i; }
     void        set_filter( string name );
 
     string      snapshot_filename()  { return "redeye-snapshot.png"; }
@@ -64,7 +64,7 @@ public:
     void        play_loop();
     void        command_request(string s);
     void	check_commands();
-    string      to_string() { return _name; }
+    string      to_string() { return _cam->id(); }
 };
 
 extern Player* player;

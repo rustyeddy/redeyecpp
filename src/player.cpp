@@ -25,9 +25,9 @@ static FltFilters* get_filters()
 
 extern void mjpeg_iframe_q(cv::Mat& iframe);
 
-Player::Player(string name)
+Player::Player(Camera* cam)
 {
-    _name = name;
+    _cam = cam;
 }
 
 void Player::command_request(string s)
@@ -105,18 +105,10 @@ void Player::stream( cv::Mat* mat )
     _streamer.publish("/video0", std::string(buff_bgr.begin(), buff_bgr.end()));
 }
 
-void Player::play_loop()
+void Player::play_loop( )
 {
-    while ( _recording ) {
-
-        if ( _frameQ.empty() ) {
-            usleep(100);
-            continue;
-        }
-        
-        cv::Mat* iframe = _frameQ.front();
-        _frameQ.pop();
-
+    while (1) {
+        cv::Mat* iframe = _cam->get_frame();
         // move this up
         if ( _filter ) {
             iframe = _filter->filter( iframe );
@@ -151,11 +143,11 @@ void Player::play( )
     _streamer.start( config->get_mjpg_port() );
     _streaming = true;
 
-    pthread_t t_playloop;
-    pthread_create( &t_playloop, NULL, ::play_loop, this );
+    //pthread_t t_playloop;
+    //pthread_create( &t_playloop, NULL, ::play_loop, this );
     while ( _recording ) {
 
-	cv::Mat* iframe = _imgsrc->get_frame();
+	cv::Mat* iframe = _cam->get_frame();
         if ( iframe == NULL || iframe->empty() ) {
             cout << "Iframe empty - stopping video..." << endl;
             _recording = false;
@@ -166,15 +158,31 @@ void Player::play( )
         if ( size > _frameQ_max ) {
             _frameQ_max = size;
         }
+        
+        // cout << "Frame size: " << size << " dropped " << _frameQ_dropped << endl;                
         if ( size > 4 ) {
             _frameQ_dropped++;
             delete iframe;
             continue;
         }
-        _frameQ.push( iframe );
+
+        //_frameQ.push( iframe );
+
+                if ( _filter ) {
+            iframe = _filter->filter( iframe );
+        }
+
+        stream ( iframe );
+        if ( ! _paused && _local_display ) {
+            display( iframe );
+        }
+        if ( _recording && _video_writer ) {
+            // _video_writer << &iframe;
+        }
+	delete iframe;
     }
 
-    pthread_join( t_playloop, NULL );
+    //pthread_join( t_playloop, NULL );
 
     _streamer.stop();
     cerr << "Video has stopped playing.. " << endl;
@@ -220,7 +228,7 @@ void Player::set_filter( string name )
 
 void Player::display( Mat* img )
 {
-    imshow( _name, *img );
+    imshow( _cam->id(), *img );
 }
 
 void *play_video( void *p )
