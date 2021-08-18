@@ -108,7 +108,7 @@ string Camera::make_url()
 {
     string p = ::to_string(_port);
     string id = _id;
-    return "http://" + _ipaddr + ":" + p + "/" + id;
+    return "http://" + _ipaddr + ":" + p + "/" + _name;
 }
 
 string Camera::to_string()
