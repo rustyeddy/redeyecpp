@@ -68,6 +68,4 @@ public:
 };
 
 extern Player* player;
-extern void* play_video( void *p ); // callback for pthreads
 extern void mouse_callback( int event, int x, int y, int flags, void *param );
-

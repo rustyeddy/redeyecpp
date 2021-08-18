@@ -33,16 +33,17 @@ private:
 
     string      _filter_name;
     bool        _usb            = false;
+    bool        _initialized    = false;
 
     cv::VideoCapture    _cap;
     CameraState         _state  = CAMERA_NOT_CONNECTED;
 
-    void        _init();        // initialize ipaddr/macaddr
 
 public:    
     queue<cv::Mat*>     frameQ;
     Camera(string id);
     Camera(string id, string name);
+    void init();        // initialize ipaddr/macaddr
 
     string id()         { return _id; }
 

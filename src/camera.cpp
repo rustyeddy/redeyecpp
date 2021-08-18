@@ -20,16 +20,14 @@ Camera::Camera(string id)
 {
     _id = id;
     _name = id;
-    _init();
 }
 
 Camera::Camera(string id, string name)
 {
     _id = id;
-    _init();
 }
 
-void Camera::_init()
+void Camera::init()
 {
     _ipaddr     = IP;
     _port       = config->get_mjpg_port();
@@ -38,9 +36,8 @@ void Camera::_init()
         _id = "/dev/" + _id;
     }
 
-
     Dimensions dims = Dimensions(); // go with defaults
-    if ( _id == "t0" || _id == "t1" ) {
+    if ( _id == "csi0" || _id == "csi1" ) {
         std::string pipeline = gstreamer_pipeline(dims.capture_width,
 						  dims.capture_height,
 						  dims.display_width,
@@ -65,6 +62,7 @@ void Camera::_init()
         cerr << "ERROR - the camera " + _id + " failed open. exiting ... " << endl;
         return;
     }
+    _initialized = true;
     cout << "Camera " + _id + " is NOW opened" << endl;
 }
 
@@ -86,6 +84,10 @@ cv::Mat* Camera::get_frame()
 
 void Camera::play()
 {
+    if (! _initialized ) {
+        init();
+    }
+
     while ( 1 ) {
         Mat* f = get_frame();
 

@@ -15,6 +15,9 @@ using MJPEGStreamer = nadjieb::MJPEGStreamer;
 using namespace cv;
 using namespace std;
 
+extern void mjpeg_iframe_q(cv::Mat& iframe);
+extern string camera_name;
+
 static FltFilters* get_filters()
 {
     if ( filters == NULL ) {
@@ -22,8 +25,6 @@ static FltFilters* get_filters()
     }
     return filters;
 }
-
-extern void mjpeg_iframe_q(cv::Mat& iframe);
 
 Player::Player(Camera* cam)
 {
@@ -109,6 +110,7 @@ void Player::play_loop( )
 {
     while (1) {
         cv::Mat* iframe = _cam->get_frame();
+
         // move this up
         if ( _filter ) {
             iframe = _filter->filter( iframe );
@@ -127,11 +129,15 @@ void Player::play_loop( )
 
 void *play_loop( void *p )
 {
-    Player *player = (Player *)p;
+    cout << "PLay loop for  " << camera_name << endl;
+    Camera *cam = cameras.get(camera_name);
+    if (cam == NULL) {
+        cout << "Unknown camera " << camera_name << endl;
+        return NULL;
+    }
+    Player *player = new Player(cam);
+    player->play();
 
-    cout << "PLay loop ! " << endl;
-    player->play_loop();
-    cout << "PLay loop returning " << endl;
     return NULL;
 }
 
@@ -143,8 +149,8 @@ void Player::play( )
     _streamer.start( config->get_mjpg_port() );
     _streaming = true;
 
-    //pthread_t t_playloop;
-    //pthread_create( &t_playloop, NULL, ::play_loop, this );
+    // _cam->play();
+    _cam->init();
     while ( _recording ) {
 
 	cv::Mat* iframe = _cam->get_frame();
@@ -159,7 +165,6 @@ void Player::play( )
             _frameQ_max = size;
         }
         
-        // cout << "Frame size: " << size << " dropped " << _frameQ_dropped << endl;                
         if ( size > 4 ) {
             _frameQ_dropped++;
             delete iframe;
@@ -168,7 +173,7 @@ void Player::play( )
 
         //_frameQ.push( iframe );
 
-                if ( _filter ) {
+        if ( _filter ) {
             iframe = _filter->filter( iframe );
         }
 
@@ -229,13 +234,6 @@ void Player::set_filter( string name )
 void Player::display( Mat* img )
 {
     imshow( _cam->id(), *img );
-}
-
-void *play_video( void *p )
-{
-    Player *player = (Player *) p;
-    player->play( );
-    return p;
 }
 
 void mouse_callback( int event, int x, int y, int flags, void *param )

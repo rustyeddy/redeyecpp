@@ -24,9 +24,11 @@ Cameras         cameras;
 queue<Event*>   eventQ;
 
 string IP       = "";
+string camera_name = "";
 
 void  main_loop();
 void* hello_loop(void *);
+void *play_loop( void *p );
 
 int main(int argc, char* argv[], char *envp[] )
 {
@@ -66,6 +68,9 @@ void main_loop()
     pthread_t t_web;    
     pthread_t t_hello;
 
+    pthread_t t_camera;
+    pthread_t t_player;
+
     pthread_create(&t_mqtt, NULL, mqtt_loop, (char *)IP.c_str());
     pthread_create(&t_web,  NULL, web_start, NULL);
     pthread_create(&t_hello, NULL, hello_loop, NULL);
@@ -81,7 +86,7 @@ void main_loop()
         string camname = "";
 
         if ( eventQ.empty() ) {
-            usleep(100);
+            usleep(2000);
             continue;
         }
 
@@ -92,22 +97,14 @@ void main_loop()
 
         case EVENT_CAMERA_PLAY:
 
-            camname = e->get_camera();
-            cam = cameras.get( camname );
-            if (cam == NULL) {
-                cout << "Error opening " + camname << endl;
-                break;
-            }
-
-            //cam->play();
-            // start a thread
-
-            player = new Player(cam);
-            player->play();
+            camera_name = e->get_camera();
+            cout << "Camera Play event for camera " << camname << endl;
+            // pthread_create(&t_player, NULL, play_loop, (char *)camname.c_str()); WTF!!!
+            pthread_create(&t_player, NULL, play_loop, NULL);
             break;
 
         case EVENT_CAMERA_PAUSE:
-
+            
             cam = cameras.get(e->get_camera());
             if (cam == NULL) {
                 // error bad camera name
