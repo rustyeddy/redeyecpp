@@ -15,15 +15,19 @@
     <body>
 
         <div class="container-fluid">
-            <div class="row">
-                <img id="vidoe0" src="http://10.11.10.10:1234/video0" />
-            </div>
+            <div id="video" class="w100"></div>
+        </div>
 
+        <div class="container-fluid">
             <div class="row">
                 <div class="col">
-                    <div id="camera-list">
-                    </div>
+                    <div id="camera-list"></div>
                 </div>
+
+                <div class="col">
+                    <div id="camera"></div>
+                </div>
+
             </div>
 
         </div>
@@ -36,9 +40,12 @@
 
         <script>
          //const axios = require('axios');
+         var camurl = '';
+
          axios.get('/api/cameras')
               .then(function (response) {
-
+                  
+                  // The camera list 
                   var html = "<h2>Camera Controls</h2>";
                   html += '<ul>';
                   var data = response.data;
@@ -51,11 +58,21 @@
                           html += obj.id + " is Off ";
                       } else {
                           html += obj.url;
+                          camurl = obj.url;
+                          console.log(camurl);
                       }
                   }
                   html += '</ul>';
                   var cams = document.getElementById("camera-list");
                   cams.innerHTML = html;
+
+                  // The current camera
+                  var camel = document.getElementById("camera");
+                  camel.innerHTML = '<h2>Current</h2>' + camurl;
+
+                  var vid = document.getElementById("video");
+                  vid.innerHTML = '<img class="w-100" src="' + camurl + '" />';
+                  
               })
               .catch(function (error) {
                   console.log(error);
