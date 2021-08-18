@@ -28,6 +28,9 @@
                     <div id="camera"></div>
                 </div>
 
+                <div class="col">
+                    <div id="filters"></div>
+                </div>
             </div>
 
         </div>
@@ -39,7 +42,6 @@
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
         <script>
-         //const axios = require('axios');
          var camurl = '';
 
          axios.get('/api/cameras')
@@ -70,9 +72,32 @@
                   var camel = document.getElementById("camera");
                   camel.innerHTML = '<h2>Current</h2>' + camurl;
 
+                  // Draw the video 
                   var vid = document.getElementById("video");
                   vid.innerHTML = '<img class="w-100" src="' + camurl + '" />';
                   
+              })
+              .catch(function (error) {
+                  console.log(error);
+              })
+              .then(function () {
+                  console.log("Whatever Default");
+              });
+
+
+         axios.get('/api/filters')
+              .then(function (response) {
+                  var html = "<h2>Filters</h2>";
+                  html += '<ul>';
+                  var data = response.data;
+                  for (var i = 0; i < data.length; i++) {
+                      html += '<li>' + data[i] + '</li>';
+                  }
+                  html += "</ul>";
+
+                  var flts = document.getElementById("filters");
+                  flts.innerHTML = html;
+
               })
               .catch(function (error) {
                   console.log(error);

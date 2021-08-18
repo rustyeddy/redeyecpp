@@ -1,3 +1,6 @@
+#include "../include/nlohmann/json.hpp"
+using json = nlohmann::json;
+
 #include "filter.hpp"
 #include "filter_default.hpp"
 #include "filter_bigger.hpp"
@@ -35,19 +38,13 @@ Filter* FltFilters::get(string name)
 
 string FltFilters::to_json()
 {
-    string jstr = "{[";
-    bool first = false;
+    json j;
 
-    std::map<std::string, Filter*>::iterator it = _filters.begin();
-    while ( it != _filters.end() ) {
-        if (!first) {
-            jstr += ",";
-        } else {
-            first = false;
-        }
-        jstr += "\"" + it->first + "\"";
-        it++;
+    cout << "Filters len: " << _filters.size() << endl;
+    std::map<std::string, Filter*>::iterator it;
+    for (it = _filters.begin(); it != _filters.end(); ++it) {
+        j += it->first;
     }
-    jstr += "]}";
-    return jstr;
+    cout << "FIL: " << j.dump() << endl;
+    return j;
 }

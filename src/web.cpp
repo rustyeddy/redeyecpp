@@ -28,11 +28,24 @@ using json = nlohmann::json;
 // Normal old HTTP
 httplib::Server         svr;
 
+void get_health_cb(const httplib::Request &, httplib::Response &res)
+{
+    json j;
+    j["health"] = string("OK");
+    res.set_content( j.dump(), "application/json" );
+}
+
+void get_filters_cb(const httplib::Request &, httplib::Response &res)
+{
+    json j;
+    j = filters->to_json();
+    cout << "J: " << j.dump() << endl;
+    res.set_content( j.dump(), "application/json" );
+}
+
 void get_cameras_cb(const httplib::Request &, httplib::Response &res)
 {
-    // TODO - Fix this.
     json j;
-
     j = cameras.to_json();
     res.set_content( j.dump(), "application/json" );
 }
@@ -44,18 +57,6 @@ void put_camera_play_cb(const httplib::Request &, httplib::Response &res)
     res.set_content( j.dump(), "application/json" );
 }
 
-void get_health_cb(const httplib::Request &, httplib::Response &res)
-{
-    json j;
-    j["health"] = string("OK");
-    res.set_content( j.dump(), "application/json" );
-}
-
-void get_filters_cb(const httplib::Request &, httplib::Response &res)
-{
-    string str = filters->to_json();
-    res.set_content(str, "application/json" );
-}
 
 void *web_start(void *p)
 {
