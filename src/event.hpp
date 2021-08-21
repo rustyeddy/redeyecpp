@@ -1,6 +1,9 @@
 #pragma once
 
 #include <queue>
+#include <string>
+
+using namespace std;
 
 enum EVENT_TYPE
 {

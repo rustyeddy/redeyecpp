@@ -28,6 +28,8 @@ using json = nlohmann::json;
 // Normal old HTTP
 httplib::Server         svr;
 
+extern FltFilters filters;
+
 void get_health_cb(const httplib::Request &, httplib::Response &res)
 {
     json j;
@@ -38,7 +40,7 @@ void get_health_cb(const httplib::Request &, httplib::Response &res)
 void get_filters_cb(const httplib::Request &, httplib::Response &res)
 {
     json j;
-    j = filters->to_json();
+    j["filters"] = filters.to_json();
     cout << "J: " << j.dump() << endl;
     res.set_content( j.dump(), "application/json" );
 }

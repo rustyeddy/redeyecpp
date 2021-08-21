@@ -12,11 +12,11 @@ using namespace std;
 class Config
 {
 private:
-    string      _camera_name     = "";
+    string      _camera_name     = "video0";
     string      _filter_name    = "";
     string      _file_name      = "";
     string      _gstreamer      = "";
-    string      _iface          = "eth0";
+    string      _iface          = "eno1"; // "eth0"
     bool        _list_cameras   = false;
     string      _mqtt_broker    = "10.11.10.10";
     int         _mjpg_port      = 1234;

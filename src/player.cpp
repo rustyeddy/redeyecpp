@@ -17,14 +17,7 @@ using namespace std;
 
 extern void mjpeg_iframe_q(cv::Mat& iframe);
 extern string camera_name;
-
-static FltFilters* get_filters()
-{
-    if ( filters == NULL ) {
-        filters = new FltFilters();
-    }
-    return filters;
-}
+extern FltFilters filters;
 
 Player::Player(Camera* cam)
 {
@@ -219,11 +212,8 @@ int Player::save_image( Mat& img )
 void Player::set_filter( string name )
 {
     if ( _filter == NULL || name != _filter->Name() ) {
-        filters = get_filters();
-        assert( filters );
-
         cout << "Setting filter to " << name << endl;
-        _filter = filters->get(name);
+        _filter = filters.get(name);
 
         if ( _filter == NULL ) {
             cerr << "filter fialed probably not known: " << name << endl;

@@ -18,8 +18,8 @@ using namespace std;
 
 Config*         config  = NULL;
 Player*         player  = NULL;
-FltFilters*     filters = NULL;
 
+FltFilters      filters;
 Cameras         cameras;
 queue<Event*>   eventQ;
 
@@ -28,7 +28,7 @@ string camera_name = "";
 
 void  main_loop();
 void* hello_loop(void *);
-void *play_loop( void *p );
+void* play_loop(void *p);
 
 int main(int argc, char* argv[], char *envp[] )
 {
@@ -55,10 +55,12 @@ int main(int argc, char* argv[], char *envp[] )
         Event *e = new Event(EVENT_CAMERA_PLAY, name );
         eventQ.push(e);
     }
+
     main_loop();
 
   done:
     cout << "Goodbye, all done. " << endl;
+
     exit(0);
 }
 
@@ -75,10 +77,10 @@ void main_loop()
     pthread_create(&t_web,  NULL, web_start, NULL);
     pthread_create(&t_hello, NULL, hello_loop, NULL);
 
-    filters = new FltFilters();
-
     // This program will wait for explicit instruction to start
     // streams from one or more of our cameras.
+
+    filters.init();
     
     bool running = true;
     while ( running ) {
@@ -149,7 +151,9 @@ void* hello_loop(void *)
     json j;
 
     while (running) {
+
         sleep(10);              // announce every 10 seconds
+
         j = cameras.to_json();
         auto ipaddr = IP.c_str();
         string chan("redeye/annouce/camera");

@@ -11,10 +11,10 @@ private:
 public:
     FltFilters();
 
-    void add(string name, Filter* f);
-    Filter* get(string name);
-
-    string to_json();
+    void        init();
+    void        add(string name, Filter* f);
+    Filter*     get(string name);
+    string      to_json();
 };
 
-extern FltFilters* filters;
+

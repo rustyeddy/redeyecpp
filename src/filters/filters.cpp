@@ -11,6 +11,10 @@ using json = nlohmann::json;
 #include "filters.hpp"
 
 FltFilters::FltFilters() {
+}
+
+void FltFilters::init()
+{
     add( "border", new FltBorder() );
     add( "bigger", new FltBigger() );
     add( "contour", new FltContour() ); 
