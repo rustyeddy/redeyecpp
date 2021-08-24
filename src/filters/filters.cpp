@@ -10,45 +10,66 @@ using json = nlohmann::json;
 
 #include "filters.hpp"
 
-FltFilters::FltFilters() {
+using namespace std;
+
+list<string> filter_names()
+{
+    list<string> _filter_names;
+    _filter_names.push_back("border");
+    _filter_names.push_back("bigger");
+    _filter_names.push_back("contour");
+    _filter_names.push_back("canny");
+    _filter_names.push_back("face-detect");
+    _filter_names.push_back("gaussian");
+    _filter_names.push_back("smaller");    
+    _filter_names.push_back("resize");
+    return _filter_names;
 }
 
-void FltFilters::init()
+Filter* filter(string name)
 {
-    add( "border", new FltBorder() );
-    add( "bigger", new FltBigger() );
-    add( "contour", new FltContour() ); 
-    add( "canny", new FltCanny() );
-    add( "face-detect", new FltHaarCascade() );
-    add( "gaussian", new FltGaussianBlur() );
-    add( "smaller", new FltSmaller() );
-    add( "resize", new FltResize() );
-}
-
-void FltFilters::add(string name, Filter* f)
-{
-    _filters[name] = f;
-}
-
-Filter* FltFilters::get(string name)
-{
-    auto it = _filters.find(name);
-    if (it != _filters.end()) {
-        Filter *filter = (Filter*) it->second;
-        return filter;
+    if ( name  == "border" ) {
+        return new FltBorder();
     }
+
+    if ( name == "bigger" ) {
+        return new FltBigger();
+    }
+
+    if ( name == "canny" ) {
+        return new FltCanny();
+    }
+
+    if ( name == "contour" ) {
+        return new FltContour();
+    }
+
+    if (name == "face-detect") {
+        return new FltGaussianBlur();
+    }
+
+    if (name == "smaller") {
+        return new FltSmaller();
+    }
+
+    if (name == "resize") {
+        return new FltResize();
+    }
+
+    // Could not find the filter !!!
     return NULL;
 }
 
-string FltFilters::to_json()
+json filter_json()
 {
     json j;
-
-    cout << "Filters len: " << _filters.size() << endl;
-    std::map<std::string, Filter*>::iterator it;
-    for (it = _filters.begin(); it != _filters.end(); ++it) {
-        j += it->first;
+    auto names = filter_names();
+    cout << "Filters len: " << names.size() << endl;
+    std::list<std::string>::iterator it;
+    for (it = names.begin(); it != names.end(); ++it) {
+        j += *it;
     }
     cout << "FIL: " << j.dump() << endl;
     return j;
 }
+

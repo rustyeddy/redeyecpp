@@ -1,20 +1,15 @@
 #pragma once 
 
+#include <list>
+
+#include "../include/nlohmann/json.hpp"
+
 #include "filter.hpp"
 #include "filter_default.hpp"
 
-class FltFilters
-{
-private:
-    map<string,Filter*> _filters;
+using namespace std;
+using json = nlohmann::json;
 
-public:
-    FltFilters();
-
-    void        init();
-    void        add(string name, Filter* f);
-    Filter*     get(string name);
-    string      to_json();
-};
-
-
+extern Filter*          filter(string name);
+extern list<string>     filter_names();
+extern json             filter_json();

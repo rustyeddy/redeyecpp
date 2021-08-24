@@ -87,11 +87,12 @@
 
          axios.get('/api/filters')
               .then(function (response) {
+                  console.log(response.data.filters);
                   var html = "<h2>Filters</h2>";
                   html += '<ul>';
-                  var data = response.data;
-                  for (var i = 0; i < data.length; i++) {
-                      html += '<li>' + data[i] + '</li>';
+                  var filts = response.data.filters;
+                  for (var i = 0; i < filts.length; i++) {
+                      html += '<li>' + filts[i] + '</li>';
                   }
                   html += "</ul>";
 

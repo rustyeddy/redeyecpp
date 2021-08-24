@@ -35,7 +35,6 @@ private:
     bool                _local_display = false;
 
     queue<Mat*>         _frameQ;
-
     int                 _frameQ_max = 0;
     int                 _frameQ_size = 0;
     int                 _frameQ_dropped = 0;

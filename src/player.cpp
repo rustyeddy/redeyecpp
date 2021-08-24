@@ -7,6 +7,7 @@
 #include "config.hpp"
 #include "externs.hpp"
 #include "filters/filter.hpp"
+#include "filters/filters.hpp"
 #include "mqtt.hpp"
 #include "player.hpp"
 
@@ -17,7 +18,6 @@ using namespace std;
 
 extern void mjpeg_iframe_q(cv::Mat& iframe);
 extern string camera_name;
-extern FltFilters filters;
 
 Player::Player(Camera* cam)
 {
@@ -211,14 +211,14 @@ int Player::save_image( Mat& img )
 
 void Player::set_filter( string name )
 {
-    if ( _filter == NULL || name != _filter->Name() ) {
-        cout << "Setting filter to " << name << endl;
-        _filter = filters.get(name);
-
-        if ( _filter == NULL ) {
-            cerr << "filter fialed probably not known: " << name << endl;
-        }
+    Filter* f = filter(name);
+    if (f == NULL) {
+        cerr << "Filter does not exist " << name << endl;
+        return;
     }
+
+    cout << "Filter set " << name << endl;
+    _filter = f;
 }
 
 void Player::display( Mat* img )

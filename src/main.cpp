@@ -19,7 +19,7 @@ using namespace std;
 Config*         config  = NULL;
 Player*         player  = NULL;
 
-FltFilters      filters;
+// FltFilters      filters;
 Cameras         cameras;
 queue<Event*>   eventQ;
 
@@ -80,7 +80,7 @@ void main_loop()
     // This program will wait for explicit instruction to start
     // streams from one or more of our cameras.
 
-    filters.init();
+    // filters.init();
     
     bool running = true;
     while ( running ) {
